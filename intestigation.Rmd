@@ -24,7 +24,8 @@ library(tidyverse)
 
 
 ```{r load-data}
-# load your data 
+AandE <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
+
 
 
 
