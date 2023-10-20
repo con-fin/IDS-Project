@@ -367,7 +367,7 @@ creating your presentation and report easier. Please note that you
 <em>do not</em> need to submit this file as part of your group
 project.</p>
 <pre class="r"><code>library(tidyverse)
-# Add any other libraries here</code></pre>
+library(lubridate)</code></pre>
 <pre class="r"><code>AandE &lt;- read_csv(&quot;data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv&quot;)</code></pre>
 <pre><code>## Rows: 13559 Columns: 14
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -377,6 +377,35 @@ project.</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>sorting Date and Time</p>
+<pre class="r"><code>AandE %&gt;% mutate(weekend_date_correct = ymd(WeekEndingDate)) %&gt;%
+  select(-WeekEndingDate) </code></pre>
+<pre><code>## # A tibble: 13,559 × 14
+##    `_id` Country   HBT   TreatmentLocation DepartmentType NumberOfAttendancesE…¹
+##    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                           &lt;dbl&gt;
+##  1     1 S92000003 S080… A210H             Emergency Dep…                    814
+##  2     2 S92000003 S080… A111H             Emergency Dep…                   1347
+##  3     3 S92000003 S080… B120H             Emergency Dep…                    517
+##  4     4 S92000003 S080… Y146H             Emergency Dep…                    604
+##  5     5 S92000003 S080… Y144H             Emergency Dep…                    196
+##  6     6 S92000003 S080… F704H             Emergency Dep…                   1284
+##  7     7 S92000003 S080… V217H             Emergency Dep…                   1095
+##  8     8 S92000003 S080… N101H             Emergency Dep…                   1116
+##  9     9 S92000003 S080… N411H             Emergency Dep…                    434
+## 10    10 S92000003 S080… N121H             Emergency Dep…                    327
+## # ℹ 13,549 more rows
+## # ℹ abbreviated name: ¹​NumberOfAttendancesEpisode
+## # ℹ 8 more variables: NumberWithin4HoursEpisode &lt;dbl&gt;,
+## #   NumberOver4HoursEpisode &lt;dbl&gt;, PercentageWithin4HoursEpisode &lt;dbl&gt;,
+## #   NumberOver8HoursEpisode &lt;dbl&gt;, PercentageOver8HoursEpisode &lt;dbl&gt;,
+## #   NumberOver12HoursEpisode &lt;dbl&gt;, PercentageOver12HoursEpisode &lt;dbl&gt;,
+## #   weekend_date_correct &lt;date&gt;</code></pre>
+<pre class="r"><code>unique(AandE$DepartmentType)</code></pre>
+<pre><code>## [1] &quot;Emergency Department&quot;</code></pre>
+<pre class="r"><code>unique(AandE$Country)</code></pre>
+<pre><code>## [1] &quot;S92000003&quot;</code></pre>
+<p>Identifying how many variables are in each column, considered
+removing the column as there is only one.</p>
 
 
 

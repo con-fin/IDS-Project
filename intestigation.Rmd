@@ -26,11 +26,14 @@ AandE <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
 
 sorting Date and Time
 ```{r data-tidying}
-AandE %>% mutate(weekend_date_correct = ymd(WeekEndingDate)) %>% !colnames("")
+AandE %>% mutate(weekend_date_correct = ymd(WeekEndingDate)) %>%
+  select(-WeekEndingDate) 
+
+unique(AandE$DepartmentType)
+unique(AandE$Country)
 ```
 
 Identifying how many variables are in each column, considered removing the column as there is only one.
-```{r data-tidying} 
- unique(AandE$DepartmentType)
- unique(AandE$Country)
+```{r spare} 
+
 ```
