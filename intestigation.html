@@ -404,8 +404,23 @@ library(lubridate)</code></pre>
 <pre><code>## [1] &quot;Emergency Department&quot;</code></pre>
 <pre class="r"><code>unique(AandE$Country)</code></pre>
 <pre><code>## [1] &quot;S92000003&quot;</code></pre>
-<p>Identifying how many variables are in each column, considered
-removing the column as there is only one.</p>
+<p>Summarising wait time over 4 hours based on location of
+treatment.</p>
+<pre class="r"><code>AandE %&gt;% group_by(TreatmentLocation) %&gt;% summarise(av = mean(NumberOver4HoursEpisode))</code></pre>
+<pre><code>## # A tibble: 32 × 2
+##    TreatmentLocation     av
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 A111H             172.  
+##  2 A210H             111.  
+##  3 B120H              84.5 
+##  4 C121H               6.50
+##  5 C313H              63.9 
+##  6 C418H             216.  
+##  7 F704H             172.  
+##  8 G107H             320.  
+##  9 G306H             175.  
+## 10 G405H             431.  
+## # ℹ 22 more rows</code></pre>
 
 
 

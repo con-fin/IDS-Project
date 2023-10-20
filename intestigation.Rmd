@@ -33,7 +33,7 @@ unique(AandE$DepartmentType)
 unique(AandE$Country)
 ```
 
-Identifying how many variables are in each column, considered removing the column as there is only one.
+Summarising wait time over 4 hours based on location of treatment.
 ```{r spare} 
-
+AandE %>% group_by(TreatmentLocation) %>% summarise(av = mean(NumberOver4HoursEpisode))
 ```
