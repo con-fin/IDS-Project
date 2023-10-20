@@ -28,3 +28,8 @@ AandE <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
 AandE %>% mutate(weekend_date_correct = ymd(WeekEndingDate)) %>% !colnames("")
 ```
 
+Identifying how many variables are in each column, considered removing the column as there is only one.
+```{r data-tidying} 
+ unique(ane$DepartmentType)
+ unique(AandE$Country)
+```
