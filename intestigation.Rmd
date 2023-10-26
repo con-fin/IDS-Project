@@ -33,7 +33,18 @@ unique(AandE$DepartmentType)
 unique(AandE$Country)
 ```
 
-Summarising wait time over 4 hours based on location of treatment.
+Summarising wait time over 4 hours based on location of treatment and percentage within 4 hours by year
 ```{r spare} 
 AandE %>% group_by(TreatmentLocation) %>% summarise(av = mean(NumberOver4HoursEpisode))
+
+AandE %>% 
+  mutate(weekend_date_correct = ymd(WeekEndingDate)) %>% mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  summarise( av = median(PercentageWithin4HoursEpisode) ) %>% 
+  ggplot( mapping = aes( x = year,
+                         y = av 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() # The median percentage within 4 hours seems to decrease over time (especially after 2020) - Why?
 ```
