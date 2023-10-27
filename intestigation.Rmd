@@ -15,7 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r load-lib, message = FALSE}
-library(tidyverse)
+library(tidyverse
+        
 library(lubridate)
 ```
 
@@ -35,7 +36,15 @@ unique(AandE$Country)
 
 Summarising wait time over 4 hours based on location of treatment and percentage within 4 hours by year
 ```{r spare} 
-AandE %>% group_by(TreatmentLocation) %>% summarise(avg = mean(NumberOver4HoursEpisode))
+AandE %>% 
+  group_by(TreatmentLocation) %>% 
+  summarise(
+    avg_pct_Within4 = mean(PercentageWithin4HoursEpisode),
+    avg_pct_Over8 = mean(PercentageOver8HoursEpisode),
+    avg_pct_Over12 = mean(PercentageOver12HoursEpisode)
+    )
+#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
+
 
 
 AandE %>% 
