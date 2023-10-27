@@ -35,5 +35,5 @@ unique(AandE$Country)
 
 Summarising wait time over 4 hours based on location of treatment.
 ```{r spare} 
-AandE %>% group_by(TreatmentLocation) %>% summarise(av = mean(NumberOver4HoursEpisode))
+AandE %>% group_by(TreatmentLocation) %>% summarise(avg = mean(NumberOver4HoursEpisode))
 ```
