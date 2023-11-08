@@ -155,7 +155,7 @@ geom_freqpoly(stat="identity") +
 ```
 ```{r}
 
-Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct < ym("2023-09")) 
+Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
 
 plot1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
                         y = NumberOfAttendancesEpisode)) +
