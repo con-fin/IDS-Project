@@ -1,6 +1,6 @@
 ---
 title: "A&E Investigation "
-subtitle: "subtitle"
+subtitle: "Question: How does A&E activity and external factors relate to waiting times in Scotland, and are there any notable trends or patterns over time?"
 author: "Binary_Brigade <br> Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton & Cameron"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
