@@ -1,6 +1,6 @@
 ---
 title: "IDS investigation worksheet"
-author: "by Binary_Brigade: Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton & Cameron"
+author: "by Binary_Brigade: Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton & Cameron Smith"
 date: "`r Sys.Date()`"
 output: html_document
 ---
