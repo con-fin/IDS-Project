@@ -5,21 +5,17 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-**Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings. How you use and structure this file is up to you. It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier. Please note that you _do not_ need to submit this file as part of your group project.
-
-
+**Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings. How you use and structure this file is up to you. It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier. Please note that you *do not* need to submit this file as part of your group project.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
 library(lubridate)
 library(cowplot)
 ```
-
 
 ```{r load-data}
 # adding a and e data
@@ -32,6 +28,7 @@ covid_nottidy <- read_csv("data/b5e3fa11-8a85-4946-bbb2-2e800d4e3594.csv")
 ```
 
 sorting Date and Time
+
 ```{r data-tidying}
 unique(aANDe$DepartmentType)
 unique(aANDe$Country)
@@ -54,7 +51,8 @@ unique(AandE$Country) # Shows that these variables are the same for all observat
 ```
 
 Summarising wait time over 4 hours based on location of treatment and percentage within 4 hours by year
-```{r spare} 
+
+```{r spare}
 AandE %>% 
   group_by(TreatmentLocation) %>% 
   summarise(
@@ -153,6 +151,7 @@ geom_freqpoly(stat="identity") +
 
 
 ```
+
 ```{r}
 
 Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
@@ -173,7 +172,18 @@ combined_plot <- plot_grid(plot1, plot2)
 
 print(combined_plot)
 ```
+
 From this it can be seen that the number of A and E admissions is directly inproportionate to the number of covid admissions.
 
+```{r}
+
+AandE$Z_Score_Within4Hours <- scale(AandE$PercentageWithin4HoursEpisode)
+outlier_threshold <- 3
+outliers_within4hours <- AandE[abs(AandE$Z_Score_Within4Hours) > outlier_threshold, ]
+print(outliers_within4hours)
 
 
+
+```
+
+This analysis calculates Z-scores for 'PercentageWithin4HoursEpisode,' helping us spot outliers which are data points that are significantly different from the average waiting time. I've set a threshold at 3 standard deviations meaning that if a week's Z-score exceeds 3 or falls below -3, it's flagged as an outlier in the 'outliers_within4hours' data frame. This helps us focus on weeks with unusual waiting time patterns.
