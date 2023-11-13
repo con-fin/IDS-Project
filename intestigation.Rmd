@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-library(lubridate)
 library(cowplot)
 ```
 
@@ -25,6 +24,8 @@ aANDe <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
 # adding covid data
 covid_nottidy <- read_csv("data/b5e3fa11-8a85-4946-bbb2-2e800d4e3594.csv")
 
+nhs_workforce_nottidy <- read_csv("data/data.csv") # Reads data collected from the NHS Scotland's Turas system about the total amount of vacancies across NHS Scotland's allied health professions. Latest release as of Nov 13 2023 https://turasdata.nes.nhs.scot/data-and-reports/official-workforce-statistics/all-official-statistics-publications/05-september-2023-workforce/dashboards/nhs-scotland-workforce/?pageid=9984
+
 ```
 
 sorting Date and Time
@@ -35,9 +36,10 @@ unique(aANDe$Country)
 
  AandE <- aANDe %>% 
   mutate(
-    weekend_date_correct = ymd(WeekEndingDate)
-    ) %>% # Gets the date information for each observation into the datetime format
-  select(-c(WeekEndingDate, DepartmentType, Country)
+    weekend_date_correct = ymd(WeekEndingDate),
+    quarter = quarter(weekend_date_correct, with_year = TRUE),
+    ) %>% # Gets the date information for each observation into the datetime and quarter format
+     select(-c(WeekEndingDate, DepartmentType, Country)
          ) # Removes irrelevant (superceded/the same for all observations) from the data set
  
  Covid <- covid_nottidy %>% 
@@ -46,8 +48,16 @@ unique(aANDe$Country)
    ) %>% 
    select(-c(Date))
 
-unique(AandE$DepartmentType)
-unique(AandE$Country) # Shows that these variables are the same for all observations
+nhs_workforce <- nhs_workforce_nottidy %>%
+  mutate(
+    census_date = ymd(`Census date`),
+    quarter = quarter(census_date, with_year = TRUE),
+    vacancies = `Value (WTE)`
+  ) %>%
+      select(
+        -c(`Census date`,`Value (WTE)`,...3,`Vacancy note`)
+      )
+  
 ```
 
 Summarising wait time over 4 hours based on location of treatment and percentage within 4 hours by year
@@ -61,7 +71,6 @@ AandE %>%
     avg_pct_Over12 = mean(PercentageOver12HoursEpisode)
     )
 #It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
-
 AandE %>% 
   mutate(year = year(weekend_date_correct)) %>%
   group_by(year) %>% 
@@ -156,19 +165,19 @@ geom_freqpoly(stat="identity") +
 
 Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
 
-plot1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
+p1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
                         y = NumberOfAttendancesEpisode)) +
-  geom_smooth() + labs( x = "number of AandE admissions",
-                        y = "date",
+  geom_smooth() + labs( y = "number of AandE admissions",
+                       x = "date",
                         title = "A and E Admissions by data during covid pandemic")
 
-plot2 <- ggplot(Covid, aes(x = weekend_date_correct,
+p2 <- ggplot(Covid, aes(x = weekend_date_correct,
                   y = NumberAdmitted)) +
   geom_smooth() + labs(x = "date",
                        y = "number of covid hospitalisations",
                        title = "number of covid admissions")
 
-combined_plot <- plot_grid(plot1, plot2)
+combined_plot <- plot_grid(p1, p2)
 
 print(combined_plot)
 ```
@@ -187,3 +196,57 @@ print(outliers_within4hours)
 ```
 
 This analysis calculates Z-scores for 'PercentageWithin4HoursEpisode,' helping us spot outliers which are data points that are significantly different from the average waiting time. I've set a threshold at 3 standard deviations meaning that if a week's Z-score exceeds 3 or falls below -3, it's flagged as an outlier in the 'outliers_within4hours' data frame. This helps us focus on weeks with unusual waiting time patterns.
+```{r}
+p3 <- AandE %>% 
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(quarter) %>%
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %>% 
+  ggplot( mapping = aes( 
+    x = quarter,
+    y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_freqpoly(stat='identity') + 
+  geom_smooth() +
+  theme_bw() # Creates a plot of median percentage of waiting times for quarter of data collection to compare against a similar plot of vacancies
+
+p4 <- nhs_workforce %>%
+  ggplot(
+    mapping = aes(
+      x = quarter,
+      y = vacancies
+    )
+  ) +
+  geom_freqpoly(stat="identity") +
+  geom_smooth() +
+  theme_bw() # Creates a plot of median percentage of vacancies among allied health NHS Scotland workers for every quarter of data collection to compare against the above plot
+
+  plot_grid(p3,p4) # Creates a plot grid of the last two plots to more easily compare their shapes and trends
+  
+  p5 <- AandE %>%
+    inner_join(
+      by = "quarter",
+      nhs_workforce
+    ) %>%
+    group_by(quarter) %>%
+      summarise(
+        med_pct_within4 = median(PercentageWithin4HoursEpisode),
+        vacancies = median(vacancies)
+      ) %>%
+    ggplot(
+      mapping = aes(
+        x = vacancies,
+        y = med_pct_within4,
+        colour = quarter
+      )
+    ) +
+    geom_point() +
+    geom_smooth(method='lm') +
+    theme_bw()
+  
+  p5 # Plots the median percentage of visits within 4 hours for a certain quarter against the vacancies recorded for that quarter and fits a preliminary linear model to it. DO A PROPOER LINEA$R REGRESSION
+  
+```
+
+From the above preliminary data visualisations,  it seems that the portion of A&E visits seen to in 4 hours, in Scotland for a given quarter, can be inversely related to the amount of vacancies (Whole Time Equivalent) wihtin NHS Scotland. 
