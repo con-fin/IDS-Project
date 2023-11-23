@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load-lib, message = FALSE}
 library(tidyverse)
 library(cowplot)
+library(lubridate)
+library(tidymodels)
 ```
 
 ```{r load-data}
@@ -224,7 +226,7 @@ p4 <- nhs_workforce %>%
 
   plot_grid(p3,p4) # Creates a plot grid of the last two plots to more easily compare their shapes and trends
   
-  p5 <- AandE %>%
+  AandE_work <- AandE %>%
     inner_join(
       by = "quarter",
       nhs_workforce
@@ -233,7 +235,8 @@ p4 <- nhs_workforce %>%
       summarise(
         med_pct_within4 = median(PercentageWithin4HoursEpisode),
         vacancies = median(vacancies)
-      ) %>%
+      )
+ p5 <- AandE_work %>%
     ggplot(
       mapping = aes(
         x = vacancies,
@@ -245,8 +248,22 @@ p4 <- nhs_workforce %>%
     geom_smooth(method='lm') +
     theme_bw()
   
-  p5 # Plots the median percentage of visits within 4 hours for a certain quarter against the vacancies recorded for that quarter and fits a preliminary linear model to it. DO A PROPOER LINEA$R REGRESSION
+  p5 # Plots the median percentage of visits within 4 hours for a certain quarter against the vacancies recorded for that quarter and fits a preliminary linear model to it. DO A PROPER LINEA$R REGRESSION
   
 ```
 
 From the above preliminary data visualisations,  it seems that the portion of A&E visits seen to in 4 hours, in Scotland for a given quarter, can be inversely related to the amount of vacancies (Whole Time Equivalent) wihtin NHS Scotland. 
+
+```{r}
+AEW_fit <- linear_reg() %>% # Initiates a linear regression
+  set_engine("lm") %>% # Gives this linear regression a linear model engine
+    fit(med_pct_within4 ~ vacancies, 
+        data = AandE_work,
+        family = "binomial"
+    )
+tidy(AEW_fit)
+glance(AEW_fit)$r.squared
+
+```
+
+This constructs a preliminary linear model that shows a inverse relation between the median percentage of visits within an hour and the total number of vacancies in the health system. The R-squared for this is over 0.9, meaning that over 90% of the variance in med_pct_within4 is explained by it. However, the intercept reflects a percentage over 100%, which might be an issue.  
