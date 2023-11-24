@@ -1,6 +1,6 @@
 ---
 title: "A&E Investigation "
-subtitle: "Ozan is the G.O.A.T."
+subtitle: "Data Science Project"
 author: "Binary_Brigade <br> Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton & Cameron"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
