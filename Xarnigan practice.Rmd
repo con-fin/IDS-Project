@@ -1,0 +1,329 @@
+---
+title: "Xarnigan practice"
+Subtitle: "Practice"
+author: "Alexander Patton"
+institute: "UOE"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, include=FALSE}
+#libraries 
+library(tidyverse)
+library(cowplot)
+library(lubridate)
+library(tidymodels)
+library(xaringanthemer)
+library(knitr)
+library(palmerpenguins)
+
+```
+
+
+```{r setup, include=FALSE}
+# For better figure resolution
+knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "50%")
+```
+
+
+```{r, include=FALSE}
+
+#Background image
+style_xaringan(
+  title_slide_background_image = "img/hospital.jpg"
+)
+```
+
+
+```{r load data, include=FALSE}
+
+# adding a and e data
+
+aANDe <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
+
+# adding covid data
+covid_nottidy <- read_csv("data/b5e3fa11-8a85-4946-bbb2-2e800d4e3594.csv")
+
+nhs_workforce_nottidy <- read_csv("data/data.csv") # Reads data collected from the NHS Scotland's Turas system about the total amount of vacancies across NHS Scotland's allied health professions. Latest release as of Nov 13 2023 https://turasdata.nes.nhs.scot/data-and-reports/official-workforce-statistics/all-official-statistics-publications/05-september-2023-workforce/dashboards/nhs-scotland-workforce/?pageid=9984
+
+```
+
+
+```{r}
+
+unique(aANDe$DepartmentType)
+unique(aANDe$Country)
+
+ AandE <- aANDe %>% 
+  mutate(
+    weekend_date_correct = ymd(WeekEndingDate),
+    quarter = quarter(weekend_date_correct, with_year = TRUE),
+    ) %>% # Gets the date information for each observation into the datetime and quarter format
+     select(-c(WeekEndingDate, DepartmentType, Country)
+         ) # Removes irrelevant (superceded/the same for all observations) from the data set
+ 
+ Covid <- covid_nottidy %>% 
+   mutate(
+     weekend_date_correct = ymd(Date)
+   ) %>% 
+   select(-c(Date))
+
+nhs_workforce <- nhs_workforce_nottidy %>%
+  mutate(
+    census_date = ymd(`Census date`),
+    quarter = quarter(census_date, with_year = TRUE),
+    vacancies = `Value (WTE)`
+  ) %>%
+      select(
+        -c(`Census date`,`Value (WTE)`,...3,`Vacancy note`)
+      )
+  
+
+```
+
+
+```{r creating graphs, inlcude=FALSE}
+
+AandE %>% 
+  group_by(TreatmentLocation) %>% 
+  summarise(
+    avg_pct_Within4 = mean(PercentageWithin4HoursEpisode),
+    avg_pct_Over8 = mean(PercentageOver8HoursEpisode),
+    avg_pct_Over12 = mean(PercentageOver12HoursEpisode)
+    )
+#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
+AandE %>% 
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %>% 
+  ggplot( mapping = aes( x = year,
+                         y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() # The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
+
+AandE %>%
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&Es, meaning that the number of observations was unlikely to change 
+    
+    
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Gives a more granular view of the trend seen before; the median percentage of attendances seen within 4 hours decreases particularly after 2020. It consistently has much lower values in 2022 and 2023, bottoming out around the beginning of 2023. 
+
+AandE %>%
+ group_by(weekend_date_correct) %>% 
+  summarise(
+    sum_Within4 = sum(NumberWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = sum_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Shows a  more granular tabulation of waits under 4 hours, giving on a weekly basis. This allows us to see that the total number of visits under 4 hours has also decreased since the beginning of the data set, bottoming out in early-to-mid 2020 and staying chaotic but generally low until today. 
+
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  filter(year(weekend_date_correct) <= 2016
+  ) %>%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2015 and 2016 to see if the closure of certain A&Es during 2015 had an effect that would be more noticeable at this scale. Around that time, no significant decrease appears to occur.
+
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  filter(year(weekend_date_correct) >= 2022
+  ) %>%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2022 and 2023 to get a closer look at the minimum at the start of 2023. The surrounding weeks appear to have similarly low values, signifying that this especially low amount of attendances under 4 hours may have been part of some greater trend. 
+  
+
+```
+
+---
+
+```{r plotting 1}
+#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
+AandE %>% 
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %>% 
+  ggplot( mapping = aes( x = year,
+                         y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() # The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
+
+
+```
+
+---
+
+```{r plotting 2}
+
+AandE %>%
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&Es, meaning that the number of observations was unlikely to change 
+
+```
+
+---
+
+```{r plotting 3}
+
+AandE %>%
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&Es, meaning that the number of observations was unlikely to change 
+    
+
+```
+
+---
+
+```{r plotting 4}
+
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Gives a more granular view of the trend seen before; the median percentage of attendances seen within 4 hours decreases particularly after 2020. It consistently has much lower values in 2022 and 2023, bottoming out around the beginning of 2023. 
+
+
+```
+
+---
+
+```{r plotting 5}
+
+AandE %>%
+ group_by(weekend_date_correct) %>% 
+  summarise(
+    sum_Within4 = sum(NumberWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = sum_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Shows a  more granular tabulation of waits under 4 hours, giving on a weekly basis. This allows us to see that the total number of visits under 4 hours has also decreased since the beginning of the data set, bottoming out in early-to-mid 2020 and staying chaotic but generally low until today. 
+```
+
+---
+
+```{r plotting 6}
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  filter(year(weekend_date_correct) <= 2016
+  ) %>%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2015 and 2016 to see if the closure of certain A&Es during 2015 had an effect that would be more noticeable at this scale. Around that time, no significant decrease appears to occur.
+```
+
+---
+
+```{r plotting 7}
+
+AandE %>%
+  group_by(weekend_date_correct) %>% 
+  filter(year(weekend_date_correct) >= 2022
+  ) %>%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2022 and 2023 to get a closer look at the minimum at the start of 2023. The surrounding weeks appear to have similarly low values, signifying that this especially low amount of attendances under 4 hours may have been part of some greater trend. 
+```
+
+---
+
+```{r plotting 8}
+
+```

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Xarnigan practice</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alexander Patton" />
+    <meta name="date" content="2023-11-24" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Xarnigan practice
+]
+.author[
+### Alexander Patton
+]
+.institute[
+### UOE
+]
+.date[
+### 2023-11-24
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```r
+unique(aANDe$DepartmentType)
+```
+
+```
+## [1] "Emergency Department"
+```
+
+```r
+unique(aANDe$Country)
+```
+
+```
+## [1] "S92000003"
+```
+
+```r
+ AandE &lt;- aANDe %&gt;% 
+  mutate(
+    weekend_date_correct = ymd(WeekEndingDate),
+    quarter = quarter(weekend_date_correct, with_year = TRUE),
+    ) %&gt;% # Gets the date information for each observation into the datetime and quarter format
+     select(-c(WeekEndingDate, DepartmentType, Country)
+         ) # Removes irrelevant (superceded/the same for all observations) from the data set
+ 
+ Covid &lt;- covid_nottidy %&gt;% 
+   mutate(
+     weekend_date_correct = ymd(Date)
+   ) %&gt;% 
+   select(-c(Date))
+
+nhs_workforce &lt;- nhs_workforce_nottidy %&gt;%
+  mutate(
+    census_date = ymd(`Census date`),
+    quarter = quarter(census_date, with_year = TRUE),
+    vacancies = `Value (WTE)`
+  ) %&gt;%
+      select(
+        -c(`Census date`,`Value (WTE)`,...3,`Vacancy note`)
+      )
+```
+
+
+
+```r
+AandE %&gt;% 
+  group_by(TreatmentLocation) %&gt;% 
+  summarise(
+    avg_pct_Within4 = mean(PercentageWithin4HoursEpisode),
+    avg_pct_Over8 = mean(PercentageOver8HoursEpisode),
+    avg_pct_Over12 = mean(PercentageOver12HoursEpisode)
+    )
+```
+
+```
+## # A tibble: 32 × 4
+##    TreatmentLocation avg_pct_Within4 avg_pct_Over8 avg_pct_Over12
+##    &lt;chr&gt;                       &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;
+##  1 A111H                        85.8         5.31          2.87  
+##  2 A210H                        82.9         6.40          3.38  
+##  3 B120H                        85.1         4.19          2.46  
+##  4 C121H                        95.9         0.286         0.0608
+##  5 C313H                        88.9         1.18          0.217 
+##  6 C418H                        81.4         4.07          0.844 
+##  7 F704H                        86.1         2.31          0.503 
+##  8 G107H                        80.6         2.88          0.498 
+##  9 G306H                        84.0         2.1           0.446 
+## 10 G405H                        75.8         4.17          0.971 
+## # ℹ 22 more rows
+```
+
+```r
+#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
+AandE %&gt;% 
+  mutate(year = year(weekend_date_correct)) %&gt;%
+  group_by(year) %&gt;% 
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %&gt;% 
+  ggplot( mapping = aes( x = year,
+                         y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() # The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-1.png" width="50%" /&gt;
+
+```r
+AandE %&gt;%
+  mutate(year = year(weekend_date_correct)) %&gt;%
+  group_by(year) %&gt;% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&amp;Es, meaning that the number of observations was unlikely to change 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-2.png" width="50%" /&gt;
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Gives a more granular view of the trend seen before; the median percentage of attendances seen within 4 hours decreases particularly after 2020. It consistently has much lower values in 2022 and 2023, bottoming out around the beginning of 2023. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-3.png" width="50%" /&gt;
+
+```r
+AandE %&gt;%
+ group_by(weekend_date_correct) %&gt;% 
+  summarise(
+    sum_Within4 = sum(NumberWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = sum_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Shows a  more granular tabulation of waits under 4 hours, giving on a weekly basis. This allows us to see that the total number of visits under 4 hours has also decreased since the beginning of the data set, bottoming out in early-to-mid 2020 and staying chaotic but generally low until today. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-4.png" width="50%" /&gt;
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  filter(year(weekend_date_correct) &lt;= 2016
+  ) %&gt;%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2015 and 2016 to see if the closure of certain A&amp;Es during 2015 had an effect that would be more noticeable at this scale. Around that time, no significant decrease appears to occur.
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-5.png" width="50%" /&gt;
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  filter(year(weekend_date_correct) &gt;= 2022
+  ) %&gt;%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2022 and 2023 to get a closer look at the minimum at the start of 2023. The surrounding weeks appear to have similarly low values, signifying that this especially low amount of attendances under 4 hours may have been part of some greater trend. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/creating graphs-6.png" width="50%" /&gt;
+
+---
+
+
+```r
+#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
+AandE %&gt;% 
+  mutate(year = year(weekend_date_correct)) %&gt;%
+  group_by(year) %&gt;% 
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %&gt;% 
+  ggplot( mapping = aes( x = year,
+                         y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() # The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 1-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+  mutate(year = year(weekend_date_correct)) %&gt;%
+  group_by(year) %&gt;% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&amp;Es, meaning that the number of observations was unlikely to change 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 2-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+  mutate(year = year(weekend_date_correct)) %&gt;%
+  group_by(year) %&gt;% 
+  ggplot(
+    mapping = aes(
+      x = year
+    )
+    ) +
+    geom_bar() +
+      theme_bw() # We can see that there is an equivalent amount of observations for each complete year (2016-2022) in this data set; this is because the data was collected into weekly sets for roughly same group of A&amp;Es, meaning that the number of observations was unlikely to change 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 3-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Gives a more granular view of the trend seen before; the median percentage of attendances seen within 4 hours decreases particularly after 2020. It consistently has much lower values in 2022 and 2023, bottoming out around the beginning of 2023. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 4-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+ group_by(weekend_date_correct) %&gt;% 
+  summarise(
+    sum_Within4 = sum(NumberWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = sum_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Shows a  more granular tabulation of waits under 4 hours, giving on a weekly basis. This allows us to see that the total number of visits under 4 hours has also decreased since the beginning of the data set, bottoming out in early-to-mid 2020 and staying chaotic but generally low until today. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 5-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  filter(year(weekend_date_correct) &lt;= 2016
+  ) %&gt;%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2015 and 2016 to see if the closure of certain A&amp;Es during 2015 had an effect that would be more noticeable at this scale. Around that time, no significant decrease appears to occur.
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 6-1.png" width="50%" /&gt;
+
+---
+
+
+```r
+AandE %&gt;%
+  group_by(weekend_date_correct) %&gt;% 
+  filter(year(weekend_date_correct) &gt;= 2022
+  ) %&gt;%
+  summarise(
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode)
+  ) %&gt;%
+  ggplot(
+    mapping = aes(
+      x = weekend_date_correct,
+      y = med_pct_Within4
+    ) 
+  ) +
+geom_freqpoly(stat="identity") +
+  theme_bw() # Creates a version of the first frequency plot limited to 2022 and 2023 to get a closer look at the minimum at the start of 2023. The surrounding weeks appear to have similarly low values, signifying that this especially low amount of attendances under 4 hours may have been part of some greater trend. 
+```
+
+&lt;img src="Xarnigan-practice_files/figure-html/plotting 7-1.png" width="50%" /&gt;
+
+---
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
