@@ -30,17 +30,21 @@ library(tidyverse)
 
 
 ## Research Question
-
-Describe your research question here. Include why this question might be of interest. 
-
+We are looking at which factors most effect A&E waiting times. We have established 2 main possible factors: 
+  1. The impact of the COVID pandemic
+  2. The impact of staff Levels
+We felt that during the time period for the data set these would be some of the main factors effecting wait times in for A&E. 
 
 
 
 
 ## Data
+In this study we used three datasets to analyse. 
+The first of which was the data set "AandE" this included information on the waiting times for different A&E wards around the country. It included varibles such as number of attendences in a day, and the % of these which were seen to in a certain time period (i.e. %. within 4 hours). 
+One of the secondary data sets that were used was "covid" this was another data set produced by public health Scotland. It was used to establish the amount of hospitalisations there were due to COVID in a given week.
+The other secondary dataset used was also by Public Health Scotland. This dataset included information about staff vacancies by quarter.
 
-Briefly describe your dataset here - include a description of the key variables you will be investigating. 
-Include a citation for your data. 
+
 See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
 If you got your data off the web, make sure to state the retrieval date.
 
@@ -50,6 +54,7 @@ If you got your data off the web, make sure to state the retrieval date.
 
 
 ## Findings
+
 
 The write-up of your project and findings go here. 
 
