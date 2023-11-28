@@ -1,14 +1,16 @@
 ---
 title: "Project title"
-author: "by Team-Name: User1, User2, User3, User4 & User5"
+author: "by Binary_Brigade: Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton & Cameron Smith"
 date: "`r Sys.Date()`"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ```{r load-lib, include = FALSE}
 library(tidyverse)
@@ -17,7 +19,6 @@ library(tidyverse)
 
 
 ```
-
 
 ```{r load-data, include=FALSE}
 # load your data here and any pre-processing/cleaning 
@@ -28,56 +29,72 @@ library(tidyverse)
 
 ```
 
-
 ## Research Question
-We are looking at which factors most effect A&E waiting times. We have established 2 main possible factors: 
-  1. The impact of the COVID pandemic
-  2. The impact of staff Levels
-We felt that during the time period for the data set these would be some of the main factors effecting wait times in for A&E. 
 
-
-
+We are looking at which factors most effect A&E waiting times.
+We have established 2 main possible factors: 1.
+The impact of the COVID pandemic 2.
+The impact of staff Levels We felt that during the time period for the data set these would be some of the main factors effecting wait times in for A&E.
 
 ## Data
-In this study we used three datasets to analyse. 
-The first of which was the data set "AandE" this included information on the waiting times for different A&E wards around the country. It included varibles such as number of attendences in a day, and the % of these which were seen to in a certain time period (i.e. %. within 4 hours). 
-One of the secondary data sets that were used was "covid" this was another data set produced by public health Scotland. It was used to establish the amount of hospitalisations there were due to COVID in a given week.
-The other secondary dataset used was also by Public Health Scotland. This dataset included information about staff vacancies by quarter.
 
+In this study we used three datasets to analyse.
+The first of which was the data set "AandE" this included information on the waiting times for different A&E wards around the country.
+It included varibles such as number of attendences in a day, and the % of these which were seen to in a certain time period (i.e. %. within 4 hours).
+One of the secondary data sets that were used was "covid" this was another data set produced by public health Scotland.
+It was used to establish the amount of hospitalisations there were due to COVID in a given week.
+The other secondary dataset used was also by Public Health Scotland.
+This dataset included information about staff vacancies by quarter.
 
-See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
+See <http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840> for guidance on proper citation for datasets.
 If you got your data off the web, make sure to state the retrieval date.
-
-
-
-
-
 
 ## Findings
 
+The write-up of your project and findings go here.
 
-The write-up of your project and findings go here. 
+Think of this as the text of your presentation with some extra detail to cover what there was not time to discuss in the presentation.
+This might include any assumptions you made when doing your analysis, any limitations of the work you have done or any ideas you have for future work.
+Feel free to split this section into subsections to make it easier to read.
 
-Think of this as the text of your presentation with some extra detail to cover what there was not time to discuss in the presentation. This might include any assumptions you made when doing your analysis, any limitations of the work you have done or any ideas you have for future work. Feel free to split this section into subsections to make it easier to read. 
-
-The length should be roughly 1,500 words. 
+The length should be roughly 1,500 words.
 If you want to use a word count addin, you can install this by copying and pasting the following into RStudio:
 
 `devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)`
 
-You will then need to restart RStudio. Once you have done that, select the text you want to count the words of, go to Addins, and select the `Word count` addin.
-This addin counts words using two different algorithms, but the results should be similar and as long as you're in the ballpark of 1,500 words, you're good! 
-The addin will ignore code chunks and only count the words in prose. If you don't want to use the addin you can always copy and paste the text into Microsoft Word to do a Word Count!
+You will then need to restart RStudio.
+Once you have done that, select the text you want to count the words of, go to Addins, and select the `Word count` addin.
+This addin counts words using two different algorithms, but the results should be similar and as long as you're in the ballpark of 1,500 words, you're good!
+The addin will ignore code chunks and only count the words in prose.
+If you don't want to use the addin you can always copy and paste the text into Microsoft Word to do a Word Count!
 
 You can also load your data here and present any analysis results / plots.
-Make sure to hide your code with  `echo = FALSE` unless the point you are trying to make is about the code itself, in which case you should show your code.
+Make sure to hide your code with `echo = FALSE` unless the point you are trying to make is about the code itself, in which case you should show your code.
 
+Methods:
 
+In our research, we initiated the process by loading three integral datasets - data from A&E, COVID-related data, and information from the NHS workforce.
+Our next step was to prime the data for a thorough analysis.
+This required us to undertake a series of crucial data cleaning and preprocessing tasks.
+Notably, we converted the date columns into the appropriate datetime format and extracted quarters and years to facilitate time-based evaluation.
+Additionally, we conducted a careful selection process to keep only relevant columns, while discarding any that were irrelevant or redundant.
 
+We used a variety of data science tools in this investigation.
+To learn more about the central tendencies of variables like waiting times, we ran descriptive statistical calculations, such as mean and median calculations.
+As we employed a range of plots and graphs to show the trends, patterns, and correlations present in the data, data visualization played a crucial role.
+Plots such as scatter plots, bar plots, and time series plots were some examples of these visual aids.
 
+Z-scores allowed us to identify anomalies in the 'PercentageWithin4HoursEpisode' column, highlighting individual data points that significantly deviated from the average waiting time.
+A comprehensive time series analysis was conducted, examining changes in waiting times on a quarterly and annual basis.
+In order to gain a deeper understanding of these patterns, we created time series graphs that allowed us to observe the variations over time, particularly the changes in the median percentage of patients seen in less than four hours.
+
+Correlation analysis was also used to investigate potential correlations between variables.
+Notably, we discovered a negative association between A&E visits within 4 hours and NHS employment vacancies.
+To study this link further, a preliminary linear regression model was built.
+
+These integrated data science tools, together with thorough data cleaning and preparation, enabled us to acquire significant insights into waiting times, discover patterns, and investigate potential links within the data, forming a solid foundation for our ongoing investigation.
 
 ## References
 
-List any references here. You should, at a minimum, list your data source.
-
-
+List any references here.
+You should, at a minimum, list your data source.
