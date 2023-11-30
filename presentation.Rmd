@@ -31,6 +31,7 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(cowplot)
 ```
 
 ```{r setup, include=FALSE}
@@ -40,7 +41,41 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 
 ```{r load-data, include=FALSE}
 # Load your data here
+# adding a and e data
+aANDe <- read_csv("data/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4.csv")
 
+# adding covid data
+covid_nottidy <- read_csv("data/b5e3fa11-8a85-4946-bbb2-2e800d4e3594.csv")
+
+nhs_workforce_nottidy <- read_csv("data/data.csv") # Reads data collected from the NHS Scotland's Turas system about the total amount of vacancies across NHS Scotland's allied health professions. Latest release as of Nov 13 2023 https://turasdata.nes.nhs.scot/data-and-reports/official-workforce-statistics/all-official-statistics-publications/05-september-2023-workforce/dashboards/nhs-scotland-workforce/?pageid=9984
+```
+```{r tidying data, include=FALSE}
+unique(aANDe$DepartmentType)
+unique(aANDe$Country)
+
+ AandE <- aANDe %>% 
+  mutate(
+    weekend_date_correct = ymd(WeekEndingDate),
+    quarter = quarter(weekend_date_correct, with_year = TRUE),
+    ) %>% # Gets the date information for each observation into the datetime and quarter format
+     select(-c(WeekEndingDate, DepartmentType, Country)
+         ) # Removes irrelevant (superceded/the same for all observations) from the data set
+ 
+ Covid <- covid_nottidy %>% 
+   mutate(
+     weekend_date_correct = ymd(Date)
+   ) %>% 
+   select(-c(Date))
+
+nhs_workforce <- nhs_workforce_nottidy %>%
+  mutate(
+    census_date = ymd(`Census date`),
+    quarter = quarter(census_date, with_year = TRUE),
+    vacancies = `Value (WTE)`
+  ) %>%
+      select(
+        -c(`Census date`,`Value (WTE)`,...3,`Vacancy note`)
+      )
 ```
 
 ```{r include=FALSE}
@@ -59,85 +94,57 @@ class: center, middle
 
 class: inverse, center, middle
 
-# Section title
+# Trends in A&E waiting times 
 
 ---
 
-# Hello World
+class: middle
 
-- Click the `Knit` button to compile your presentation
-
-- Make sure to commit and push all resulting files to your GitHub repo
-
----
-
-class: inverse, middle, center
-
-# Using xaringan
-
----
-
-# xaringan
-
-- The presentation is created using the `xaringan` package
-
-- Use `---` to separate slides and `--` for incremental builds
-
---
-
-- Like this
-
----
-
-# Layouts
-
-You can use plain text
-
-- or bullet points
-
-.pull-left[
-or text in two columns $^*$
-]
-.pull-right[
-- like
-- this
-]
-
-.footnote[
-[*] And add footnotes
-]
-
----
-
-# Code
-
-```{r boring-regression}
-# a boring regression
-model <- lm(dist ~ speed, data = cars)
-tidy(model)
-glance(model)
+The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
+```{r echo=  FALSE}
+AandE %>% 
+  mutate(year = year(weekend_date_correct)) %>%
+  group_by(year) %>% 
+  summarise( 
+    med_pct_Within4 = median(PercentageWithin4HoursEpisode) ) %>% 
+  ggplot( mapping = aes( x = year,
+                         y = med_pct_Within4 
+                         ) 
+          ) + 
+  geom_bar(stat='identity') + 
+  theme_bw() +
+  labs(title = "Percentage of Wait Time Under Four Hours by Year",
+       y = "Median % Seen To Within 4 Hours",
+       x = "Year")
+par(mar = c(5, 5, 5, 5))
 ```
-
 ---
+# Why during 2020
 
-# Plots
+- To investigate wait times during 2020 we joined a data set that contained information about COVID-19
 
-```{r recode-species, echo = FALSE}
-# In this chunk I'm doing a bunch of analysis that I don't want to present 
-# in my slides. But I need the resulting data frame for a plot I want to present.
-iris_modified <- iris %>%
-  mutate(Species = fct_other(Species, keep = "setosa"))
+```{r covid graph, echo=FALSE}
+Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
+
+p1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
+                        y = NumberOfAttendancesEpisode)) +
+  geom_smooth() + labs( y = "number of AandE admissions",
+                       x = "date",
+                        title = "A and E Admissions by Date During Covid pandemic")
+
+p2 <- ggplot(Covid, aes(x = weekend_date_correct,
+                  y = NumberAdmitted)) +
+  geom_smooth() + labs(x = "date",
+                       y = "number of covid hospitalisations",
+                       title = "Number of Covid Hospitalisations by date")
+
+combined_plot <- plot_grid(p1, p2)
+
+print(combined_plot)
 ```
-
-```{r plot-iris, echo = FALSE}
-# Code hidden with echo = FALSE
-# Uses modified iris dataset from previous chunk
-# Play around with height and width until you're happy with the look
-ggplot(data = iris_modified, mapping = aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
-  geom_point() + 
-  theme_minimal() # theme options: https://ggplot2.tidyverse.org/reference/ggtheme.html
-```
-
+---
+- From this it can be seen that there is an inverse relationship between the number of hospital addmissions for COVID and the number of A and E admissions.
+- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E. This will have driven down the median waiting time. 
 ---
 
 ## Plot and text
