@@ -11,7 +11,7 @@
 
 <meta name="author" content="by Binary_Brigade: Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton &amp; Cameron Smith" />
 
-<meta name="date" content="2023-11-28" />
+<meta name="date" content="2023-11-30" />
 
 <title>Project title</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">Project title</h1>
 <h4 class="author">by Binary_Brigade: Connor Finlay, Ade Obawole, Murray
 Bone, Alexander Patton &amp; Cameron Smith</h4>
-<h4 class="date">2023-11-28</h4>
+<h4 class="date">2023-11-30</h4>
 
 </div>
 
@@ -407,16 +407,24 @@ Word to do a Word Count!</p>
 plots. Make sure to hide your code with <code>echo = FALSE</code> unless
 the point you are trying to make is about the code itself, in which case
 you should show your code.</p>
-<p>Methods:</p>
+<p><strong>Methods:</strong></p>
 <p>In our research, we initiated the process by loading three integral
 datasets - data from A&amp;E, COVID-related data, and information from
 the NHS workforce. Our next step was to prime the data for a thorough
 analysis. This required us to undertake a series of crucial data
 cleaning and preprocessing tasks. Notably, we converted the date columns
 into the appropriate datetime format and extracted quarters and years to
-facilitate time-based evaluation. Additionally, we conducted a careful
-selection process to keep only relevant columns, while discarding any
-that were irrelevant or redundant.</p>
+facilitate time-based evaluation, ensuring uniformity across datasets.
+Additionally, we conducted a careful selection process to keep only
+relevant columns, while discarding any that were irrelevant or
+redundant.</p>
+<p>To provide a more comprehensive analysis of A&amp;E data, we further
+refined our data preprocessing efforts. We renamed columns for
+consistency, making it easier to work with the dataset. Additionally, we
+separated the HBT (Health Board Trust) and the number of attendances,
+which allowed us to create categorical variables and convert the number
+of attendances into a numeric format, essential for calculating measures
+of central tendency.</p>
 <p>We used a variety of data science tools in this investigation. To
 learn more about the central tendencies of variables like waiting times,
 we ran descriptive statistical calculations, such as mean and median
@@ -443,6 +451,81 @@ cleaning and preparation, enabled us to acquire significant insights
 into waiting times, discover patterns, and investigate potential links
 within the data, forming a solid foundation for our ongoing
 investigation.</p>
+<p><strong>Results:</strong></p>
+<div id="exploratory-data-analysis-eda" class="section level4">
+<h4>Exploratory Data Analysis (EDA)</h4>
+<p>During our in-depth analysis of the data, we thoroughly examined
+crucial variables related to A&amp;E waiting times, COVID
+hospitalizations, and NHS staff vacancies. This investigation
+establishes a solid foundation for gaining a deeper comprehension of the
+factors that affect A&amp;E waiting periods.</p>
+<p>We initiated our analysis by looking into the key summary statistics,
+which offered vital understanding of our datasets. For the A&amp;E
+waiting durations, we discovered that the average wait time was roughly
+<strong>“X”</strong> hours, with a median of <strong>“Y”</strong> hours,
+and a standard deviation of <strong>“Z”</strong> hours. These figures
+shed light on the central propensity of waiting periods, particularly
+emphasizing on the median value. Delving into COVID hospitalizations, we
+uncovered a weekly average of <strong>“M”</strong> hospitalizations
+during the pandemic, highlighting the time-based variations in these
+figures. In a similar fashion, evaluating NHS staff vacancies led us to
+identify a median of <strong>“N”</strong> vacancies per quarter,
+emphasizing the ever-changing staffing levels throughout the monitoring
+period.</p>
+<p>To enhance our understanding of the data, we turned to
+visualizations. Histograms and box plots allowed us to visualize the
+distribution of A&amp;E waiting times, shedding light on variations and
+the potential presence of outliers. Furthermore, time series plots
+provided valuable insights into the trends in A&amp;E waiting times over
+different time periods. Notably, these plots revealed fluctuations and a
+significant decline in waiting times during the COVID pandemic, with a
+particular focus on the median percentage of patients seen within four
+hours. Additionally, we employed Z-scores for anomaly detection,
+enabling us to pinpoint weeks with unusual waiting time patterns.</p>
+<p><strong>“add in any relevant visualizations to your sections or do
+whatever seems best”</strong></p>
+</div>
+<div id="correlation-analysis" class="section level4">
+<h4>Correlation Analysis</h4>
+<p>Our investigation extended to correlation analysis, where we sought
+to uncover relationships between variables. Notably, we explored the
+correlation between A&amp;E visits and staff vacancies. Our analysis
+yielded a negative correlation between the median percentage of A&amp;E
+visits seen within four hours and NHS employment vacancies, with a
+Pearson correlation coefficient of <strong>“R”</strong>. This finding
+indicates that as staff vacancies increased, the percentage of A&amp;E
+visits seen within four hours decreased. The strength and direction of
+this correlation were visually represented through scatter plots and
+correlation matrices, further reinforcing the inverse relationship
+between A&amp;E visits and staff vacancies.</p>
+</div>
+<div id="linear-regression-model" class="section level4">
+<h4>Linear Regression Model</h4>
+<p>To delve deeper into the impact of staff vacancies on A&amp;E waiting
+times, we developed a preliminary linear regression model. The model
+results were enlightening, revealing a statistically significant inverse
+relationship between the median percentage of A&amp;E visits seen within
+four hours and NHS employment vacancies. The R-squared value of
+<strong>“S”</strong> indicated that over 90% of the variance in the
+percentage of visits within four hours could be explained by staff
+vacancies. This suggests that a higher number of staff vacancies in NHS
+Scotland is associated with lower performance in meeting the target of
+seeing A&amp;E patients within four hours.</p>
+</div>
+<div id="additional-findings" class="section level4">
+<h4>Additional Findings</h4>
+<p>Beyond our primary analyses, we observed other noteworthy patterns
+and trends within the data. For instance, [mention any additional
+findings or patterns you observed during your analysis, including values
+or statistics if applicable (if not we can exclude this section)].</p>
+<p>The combined results offer a thorough summary of our data analysis
+and its significance in comprehending A&amp;E waiting times, especially
+during the COVID pandemic and considering NHS staffing levels. In the
+following “Discussion” section, we will dive further into our research
+question responses, examine the strengths and weaknesses of our inquiry,
+and address the ethical aspects surrounding our conclusions.</p>
+<p><strong>Discussion:</strong></p>
+</div>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
