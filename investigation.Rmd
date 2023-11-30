@@ -35,7 +35,7 @@ sorting Date and Time
 unique(aANDe$DepartmentType)
 unique(aANDe$Country)
 
- AandE <- aANDe %>% 
+AandE <- aANDe %>% 
   mutate(
     weekend_date_correct = ymd(WeekEndingDate),
     quarter = quarter(weekend_date_correct, with_year = TRUE),
@@ -43,7 +43,15 @@ unique(aANDe$Country)
      select(-c(WeekEndingDate, DepartmentType, Country)
          ) # Removes irrelevant (superceded/the same for all observations) from the data set
  
- Covid <- covid_nottidy %>% 
+
+#renaming columns to be consistent
+AandE <- AandE %>%
+  rename(
+    WeekendDateCorrect = weekend_date_correct,
+    QuarterIntv = quarter,
+  )
+
+Covid <- covid_nottidy %>% 
    mutate(
      weekend_date_correct = ymd(Date)
    ) %>% 
@@ -186,13 +194,10 @@ print(combined_plot)
 From this it can be seen that the number of A and E admissions is directly inproportionate to the number of covid admissions.
 
 ```{r}
-
 AandE$Z_Score_Within4Hours <- scale(AandE$PercentageWithin4HoursEpisode)
 outlier_threshold <- 3
 outliers_within4hours <- AandE[abs(AandE$Z_Score_Within4Hours) > outlier_threshold, ]
 print(outliers_within4hours)
-
-
 
 ```
 
@@ -268,7 +273,90 @@ glance(AEW_fit)$r.squared
 This constructs a preliminary linear model that shows a inverse relation between the median percentage of visits within an hour and the total number of vacancies in the health system. The R-squared for this is over 0.9, meaning that over 90% of the variance in med_pct_within4 is explained by it. However, the intercept reflects a percentage over 100%, which might be an issue.  
 
 ```{r}
-AandE_Loc <- read_csv("data/dz2011_codes_and_labels_21042020.csv")
-AandE %>% select(HBT, NumberOfAttendancesEpisode)
 
+#seperating HBT and number of attendances so that categorical variables can be created, turning number of attendences into a numeric form to calculate measures of central tendancy, renaming column to be simpler)
+HBTAtten <- AandE %>% 
+  select(HBT, NumberOfAttendancesEpisode) %>% 
+  rename(NumAttended = NumberOfAttendancesEpisode) %>% 
+  mutate(NumAttended = as.numeric(NumAttended))
+
+# View the resulting data frame
+print(HBTAtten)
+
+#average number of Attendances to the practice
+mean(HBTAtten$NumAttended)
+#mean is 833.33
+
+#finding all locations within dataframe
+unique(HBTAtten$HBT)
+
+#calculating mean attendances for each HBT
+S15 <- HBTAtten %>%
+  filter(HBT == "S08000015")
+mean(S15$NumAttended)
+
+S16 <- HBTAtten %>%
+  filter(HBT == "S08000016")
+mean(S16$NumAttended)
+
+S17 <- HBTAtten %>%
+  filter(HBT == "S08000017")
+mean(S17$NumAttended)
+
+S28 <- HBTAtten %>%
+  filter(HBT == "S08000028")
+mean(S28$NumAttended)
+
+S19 <- HBTAtten %>%
+  filter(HBT == "S08000019")
+mean(S19$NumAttended)
+
+S20 <- HBTAtten %>%
+  filter(HBT == "S08000020")
+mean(S20$NumAttended)
+
+S22 <- HBTAtten %>%
+  filter(HBT == "S08000022")
+mean(S22$NumAttended)
+
+S32 <- HBTAtten %>%
+  filter(HBT == "S08000032")
+mean(S32$NumAttended)
+
+S24 <- HBTAtten %>%
+  filter(HBT == "S08000015")
+mean(S24$NumAttended)
+
+S25 <- HBTAtten %>%
+  filter(HBT == "S08000025")
+mean(S15$NumAttended)
+
+S26 <- HBTAtten %>%
+  filter(HBT == "S08000026")
+mean(S26$NumAttended)
+
+S30 <- HBTAtten %>%
+  filter(HBT == "S08000030")
+mean(S30$NumAttended)
+
+S31 <- HBTAtten %>%
+  filter(HBT == "S08000031")
+mean(S31$NumAttended)
+
+S28 <- HBTAtten %>%
+  filter(HBT == "S08000028")
+mean(S28$NumAttended)
+
+S29 <- HBTAtten %>%
+  filter(HBT == "S08000029")
+mean(S29$NumAttended)
+
+#creating a new dataframe that includes the mean attendances of HBTs
+first_column <- c("S08000015", "S08000016", "S08000017", "S08000019", "S08000020", "S08000022", "S08000024", "S08000025", "S08000026", "S08000028", "S08000029", "S08000030", "S08000031", "S08000032")
+second_column <- c("988.0455", "561.5078","435.0532", "1163.206", "616.1212", "285.3492", " 988.0455", "118.2772", "139.6851", " 114.2506", "1219.539", "709.4213","1274.071", "1260.387")
+
+
+
+MeanAtten <- data.frame(first_column, second_column)
+MeanAtten
 ```
