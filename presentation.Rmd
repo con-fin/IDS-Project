@@ -76,6 +76,17 @@ nhs_workforce <- nhs_workforce_nottidy %>%
       select(
         -c(`Census date`,`Value (WTE)`,...3,`Vacancy note`)
       )
+
+ AandE_work <- AandE %>%
+    inner_join(
+      by = "quarter",
+      nhs_workforce
+    ) %>%
+    group_by(quarter) %>%
+      summarise(
+        med_pct_within4 = median(PercentageWithin4HoursEpisode),
+        vacancies = median(vacancies)
+      )
 ```
 
 ```{r include=FALSE}
@@ -119,12 +130,14 @@ AandE %>%
 par(mar = c(5, 5, 5, 5))
 ```
 ---
-# Why during 2020
+class: inverse, center, middle
 
+#Why during 2020
+---
 - To investigate wait times during 2020 we joined a data set that contained information about COVID-19
-
-```{r covid graph, echo=FALSE}
-Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
+```{r echo=  FALSE}
+Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <=
+ym("2023-09")) 
 
 p1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
                         y = NumberOfAttendancesEpisode)) +
@@ -137,33 +150,26 @@ p2 <- ggplot(Covid, aes(x = weekend_date_correct,
   geom_smooth() + labs(x = "date",
                        y = "number of covid hospitalisations",
                        title = "Number of Covid Hospitalisations by date")
-
 combined_plot <- plot_grid(p1, p2)
 
 print(combined_plot)
 ```
 ---
-- From this it can be seen that there is an inverse relationship between the number of hospital addmissions for COVID and the number of A and E admissions.
+- From this it can be seen that there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
 - Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E. This will have driven down the median waiting time. 
+- Hence we can state that COVID levels did have an effect on A&E admissions.
 ---
+class: inverse, center, middle
 
-## Plot and text
-
-.pull-left[
-- Some text
-- goes here
-]
-.pull-right[
-```{r warning=FALSE, out.width="100%", fig.width=4, echo=FALSE}
-# see how I changed out.width and fig.width from defaults
-# to make the figure bigger
-ggplot(penguins, aes(x = bill_length_mm, y = species, color = species)) +
-  geom_boxplot() +
-  theme_minimal()
-```
-]
-
+#Effect of staff levels on A&E waiting times
 ---
+#Method Used to Investigate
+-To investigate we joined another PHS data set to the A&E data.
+  -This data set included information on the quarterly staffing levels in the NHS.
+-We fit a linear reggression model to this to establish if there a trend or not.
+-FOR CONNOR TO ADD TO
+---
+#Linear Regression Plotted
 
 # Tables
 
