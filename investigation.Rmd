@@ -359,4 +359,14 @@ second_column <- c("988.0455", "561.5078","435.0532", "1163.206", "616.1212", "2
 
 MeanAtten <- data.frame(first_column, second_column)
 MeanAtten
+
+#creating graph
+ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Attendances for Health Board Trusts",
+       x = "Health Board Trusts",
+       y = "Mean Attendances") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
