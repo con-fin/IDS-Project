@@ -76,14 +76,45 @@ class: inverse, center, middle
 #Effect of staff levels on A&amp;E waiting times
 ---
 #Method Used to Investigate
--To investigate we joined another PHS data set to the A&amp;E data.
--This data set included information on the quarterly staffing levels in the NHS.
--We fit a linear reggression model to this to establish if there a trend or not.
--FOR CONNOR TO ADD TO
+- Vacancy information not in the original dataset 
+  - To investigate we joined another NHS data set to the A&amp;E data.
+  - This data set included information on the quarterly vacancies amount (Whole Time Equivalent) in NHS Scotland.
+- Visualised the quarterly vacancies and % within 4 hours respectively
+- Visualised % within 4 hours against vacancies per-quarter as a linear model 
+- Conducted a linear regression of the % within 4 hours against the number of vacancies in NHS Scotland (WTE). 
 ---
+#Preliminary Visualisations
+- Appearance of the same trend in each plot, only flipped -&gt; May have a linear relationship 
+&lt;img src="presentation_files/figure-html/workforce visualisations-1.png" width="80%" /&gt;
 
-#Linear Regression Plotted
-&lt;img src="presentation_files/figure-html/linear reg plot-1.png" width="80%" /&gt;
+---
+#Linear Model Plotted
+- Visually, the points seem to follow quite a strong inverse relation between the variables
+&lt;img src="presentation_files/figure-html/linear model plot-1.png" width="80%" /&gt;
+
+---
+#Linear Regression
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept) 108.       1.19         90.9 3.43e-40
+## 2 vacancies    -0.0279   0.00164     -17.0 1.32e-17
+```
+
+```
+## [1] 0.9006537
+```
+
+```
+## [1] 0.8975492
+```
+- The model states that for every increase of 1 Whole Time Equivalent unit of vacancy,the median % of A&amp;E visits being seen to within 4 hours will decrease by approximately -0.02788211 on average. 
+- The intercept is over 108 for a variable that is only in percentage (the maximum should be 100), reflecting how the y-intercept is not a real, meaningful data point, but a mathematical tool
+- $$ \hat{PercentWithin4} = 108.31119126 - 0.02788211 \times Vacancies $$
+- The R-Squared and Adjusted R-Squared communicate that this model accounts for approximately 90.06537% and 89.75492% of the variance in the median percentage at 4 hours or less, respectively
+  - Quite high -&gt; demonstrates high inverse correlation between these variables
 ---
 class: inverse, center, middle
 
