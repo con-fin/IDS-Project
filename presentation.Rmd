@@ -165,65 +165,155 @@ class: inverse, center, middle
 ---
 #Method Used to Investigate
 -To investigate we joined another PHS data set to the A&E data.
-  -This data set included information on the quarterly staffing levels in the NHS.
+-This data set included information on the quarterly staffing levels in the NHS.
 -We fit a linear reggression model to this to establish if there a trend or not.
 -FOR CONNOR TO ADD TO
 ---
+
 #Linear Regression Plotted
+```{r linear reg plot, echo = FALSE, warning=FALSE, message=FALSE}
+  AandE_work <- AandE %>%
+    inner_join(
+      by = "quarter",
+      nhs_workforce
+    ) %>%
+    group_by(quarter) %>%
+      summarise(
+        med_pct_within4 = median(PercentageWithin4HoursEpisode),
+        vacancies = median(vacancies)
+      )
+ p5 <- AandE_work %>%
+    ggplot(
+      mapping = aes(
+        x = vacancies,
+        y = med_pct_within4,
+        colour = quarter
+      )
+    ) +
+    geom_point() +
+    geom_smooth(method='lm') +
+    theme_bw() +
+   labs( title = "Linear Regression",
+         y = "% within 4 hours",
+         x = "Vacancies")
 
-# Tables
 
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
-
-```{r iris-table, echo = FALSE}
-kable(head(iris), format = "html")
+print(p5)
 ```
-
 ---
-
-# Images
-
-```{r castle, echo = FALSE, out.width = "55%", fig.align = "center", fig.cap = "Image credit: Photo by Jörg Angeli on Unsplash."}
-include_graphics("img/edinburgh-castle.jpg")
-```
-
-Or you can also include a full page image. See next slide.
-
----
-
-
 class: inverse, center, middle
-background-image: url(img/edinburgh-castle.jpg)
-background-size: contain
+
+#AandE trends by Health Board
 ---
-
-# Math Expressions
-
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. &#36;\alpha+\beta$ renders $\alpha+\beta$. You can use the display style with double dollar signs:
-
-```
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
-
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-
-Limitations:
-
-1. The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-1. There should not be spaces after the opening `$` or before the closing `$`.
-
-1. Math does not work on the title slide (see [#61](https://github.com/yihui/xaringan/issues/61) for a workaround).
-
+#Method employed
+-FOR CAMERON TO ADD TO
 ---
+#Plot
+```{r Cameron Code, include=FALSE}
+  #seperating HBT and number of attendances so that categorical variables can be created, turning number of attendences into a numeric form to calculate measures of central tendancy, renaming column to be simpler)
+HBTAtten <- AandE %>% 
+  select(HBT, NumberOfAttendancesEpisode) %>% 
+  rename(NumAttended = NumberOfAttendancesEpisode) %>% 
+  mutate(NumAttended = as.numeric(NumAttended))
 
-# Feeling adventurous?
+# View the resulting data frame
+print(HBTAtten)
 
-- Want to find out more about `xaringan`? See https://slides.yihui.name/xaringan/#1.
+#average number of Attendances to the practice
+mean(HBTAtten$NumAttended)
+#mean is 833.33
 
-- You are welcome to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+#finding all locations within dataframe
+unique(HBTAtten$HBT)
 
-- But some of you might want to play around with slide styling. The 
-`xaringanthemer` provides some solutions for this that: https://pkg.garrickadenbuie.com/xaringanthemer.
+#calculating mean attendances for each HBT
+S15 <- HBTAtten %>%
+  filter(HBT == "S08000015")
+mean(S15$NumAttended)
 
-- And if you want more bells and whistles, there is also `xaringanExtra`: https://pkg.garrickadenbuie.com/xaringanExtra.
+S16 <- HBTAtten %>%
+  filter(HBT == "S08000016")
+mean(S16$NumAttended)
+
+S17 <- HBTAtten %>%
+  filter(HBT == "S08000017")
+mean(S17$NumAttended)
+
+S28 <- HBTAtten %>%
+  filter(HBT == "S08000028")
+mean(S28$NumAttended)
+
+S19 <- HBTAtten %>%
+  filter(HBT == "S08000019")
+mean(S19$NumAttended)
+
+S20 <- HBTAtten %>%
+  filter(HBT == "S08000020")
+mean(S20$NumAttended)
+
+S22 <- HBTAtten %>%
+  filter(HBT == "S08000022")
+mean(S22$NumAttended)
+
+S32 <- HBTAtten %>%
+  filter(HBT == "S08000032")
+mean(S32$NumAttended)
+
+S24 <- HBTAtten %>%
+  filter(HBT == "S08000015")
+mean(S24$NumAttended)
+
+S25 <- HBTAtten %>%
+  filter(HBT == "S08000025")
+mean(S15$NumAttended)
+
+S26 <- HBTAtten %>%
+  filter(HBT == "S08000026")
+mean(S26$NumAttended)
+
+S30 <- HBTAtten %>%
+  filter(HBT == "S08000030")
+mean(S30$NumAttended)
+
+S31 <- HBTAtten %>%
+  filter(HBT == "S08000031")
+mean(S31$NumAttended)
+
+S28 <- HBTAtten %>%
+  filter(HBT == "S08000028")
+mean(S28$NumAttended)
+
+S29 <- HBTAtten %>%
+  filter(HBT == "S08000029")
+mean(S29$NumAttended)
+
+#creating a new dataframe that includes the mean attendances of HBTs
+first_column <- c("S08000015", "S08000016", "S08000017", "S08000019", "S08000020", "S08000022", "S08000024", "S08000025", "S08000026", "S08000028", "S08000029", "S08000030", "S08000031", "S08000032")
+second_column <- c("988.0455", "561.5078","435.0532", "1163.206", "616.1212", "285.3492", " 988.0455", "118.2772", "139.6851", " 114.2506", "1219.539", "709.4213","1274.071", "1260.387")
+
+
+
+MeanAtten <- data.frame(first_column, second_column)
+MeanAtten
+```
+
+
+
+```{r health board plot, echo = FALSE, warning=FALSE, message=FALSE }
+#creating graph
+ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Attendances for Health Board Trusts",
+       x = "Health Board Trusts",
+       y = "Mean Attendances") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+---
+class: inverse, center, middle
+
+#Conclusions
+---
+#Conclusions
+- As stress due to COVID increased, the stress on A&E decreased
+- ...
