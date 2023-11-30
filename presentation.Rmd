@@ -112,7 +112,7 @@ class: inverse, center, middle
 class: middle
 
 The median percentage seen to within 4 hours seems to decrease over time (especially after 2020) - Why?
-```{r echo=  FALSE}
+```{r Covid Graph 1,  echo = FALSE, warning=FALSE, message=FALSE  }
 AandE %>% 
   mutate(year = year(weekend_date_correct)) %>%
   group_by(year) %>% 
@@ -135,7 +135,7 @@ class: inverse, center, middle
 #Why during 2020
 ---
 - To investigate wait times during 2020 we joined a data set that contained information about COVID-19
-```{r echo=  FALSE}
+```{r Covid graph 2,  echo = FALSE, warning=FALSE, message=FALSE }
 Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <=
 ym("2023-09")) 
 
