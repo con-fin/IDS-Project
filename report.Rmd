@@ -98,6 +98,9 @@ To study this link further, a preliminary linear regression model was built.
 
 These integrated data science tools, together with thorough data cleaning and preparation, enabled us to acquire significant insights into waiting times, discover patterns, and investigate potential links within the data, forming a solid foundation for our ongoing investigation.
 
+We had to calculate percentages, mutate our dataframes and create new ones to quantify to mean attendances per Health Board (HBT). Additionally, we created categorical variables quantifying HBTs into "High", "Medium" "Low" and plotted graphs based on those.
+
+Additionally Renamed columns to maintain consistency as some columns were in different formats.
 **Results:**
 
 #### Exploratory Data Analysis (EDA)
@@ -143,6 +146,7 @@ The combined results offer a thorough summary of our data analysis and its signi
 In the following "Discussion" section, we will dive further into our research question responses, examine the strengths and weaknesses of our inquiry, and address the ethical aspects surrounding our conclusions.
 
 **Discussion:**
+We discovered that the size of an A&E facility does in fact affect the waiting times for a location/Hea, this was represented by a dataframe that was mutated to demonstrate mean attendances for Health Boards and the percentage of waiting times (within 4 hours and over 4/8/12 hours) for individuals who attended the facility.
 
 ## References
 
