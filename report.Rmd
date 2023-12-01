@@ -39,12 +39,12 @@ The impact of staff Levels We felt that during the time period for the data set 
 ## Data
 
 In this study we used three datasets to analyse.
-The first of which was the data set "AandE" this included information on the waiting times for different A&E wards around the country.
+The first of which was the data set "AandE" (Public Health Scotland [PHS], 2023a) included information on the waiting times for different A&E wards around the country.
 It included varibles such as number of attendences in a day, and the % of these which were seen to in a certain time period (i.e. %. within 4 hours).
-One of the secondary data sets that were used was "covid" this was another data set produced by public health Scotland.
+One of the secondary data sets that were used was "covid" (PHS, 2023b) this was another data set produced by public health Scotland.
 It was used to establish the amount of hospitalisations there were due to COVID in a given week.
 The other secondary dataset used was also by Public Health Scotland.
-This dataset included information about staff vacancies by quarter.
+This dataset included information about staff vacancies by quarter (Turas Data Intelligence, 2023).
 
 ## Findings
 
@@ -127,5 +127,7 @@ There are limitations of the data source as there are problems with staff vacanc
 
 ## References
 
-List any references here.
-You should, at a minimum, list your data source.
+- Public Health Scotland [PHS]. (2023a). Weekly Accident & Emergency Activity and Waiting Times. https://www.opendata.nhs.scot/dataset/weekly-accident-and-emergency-activity-and-waiting-times/resource/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4. Retrieved 20 October 2023.  
+- Public Health Scotland [PHS]. (2023b). Weekly Admissions by Age. https://www.opendata.nhs.scot/ne/dataset/b318bddf-a4dc-4262-971f-0ba329e09b87/resource/b5e3fa11-8a85-4946-bbb2-2e800d4e3594. Retrieved 8 November 2023
+- Turas Data Intelligence. [TDI]. (2023). NHS Scotland workforce. https://turasdata.nes.nhs.scot/data-and-reports/official-workforce-statistics/all-official-statistics-publications/05-september-2023-workforce/dashboards/nhs-scotland-workforce/?pageid=9984. Retrieved 13 November 2023. 
+
