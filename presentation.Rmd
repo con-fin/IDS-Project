@@ -135,31 +135,38 @@ par(mar = c(5, 5, 5, 5))
 class: inverse, center, middle
 
 #Why during 2020
+
 ---
-- To investigate wait times during 2020 we joined a data set that contained information about COVID-19
-```{r Covid graph 2,  echo = FALSE, warning=FALSE, message=FALSE }
-Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <=
-ym("2023-09")) 
+#In order to investigate this, a linear regression model was fitted to the joint data set. 
+- Intercept = 24415.354, suggests that when there are no COVID hosptial admissions there would be 24415 A&E admissions. 
+- The gradient is -2.8, which tells us that for everyone person admitted due to covid. An estimated 2.8 fewer people are admitted to AandE
+- The rule is statistically meaningful telling us that: there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
+- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E. 
+---
+```{r Covid plot,  echo = FALSE, warning=FALSE, message=FALSE }
+#Group AandE admissions by date
+Week_data <- AandE %>% 
+  group_by(weekend_date_correct) %>% 
+  summarise(total_admitted_AandE = sum(NumberOfAttendancesEpisode))
 
-p1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
-                        y = NumberOfAttendancesEpisode)) +
-  geom_smooth() + labs( y = "number of AandE admissions",
-                       x = "date",
-                        title = "A and E Admissions by Date During Covid pandemic")
+#change format of COVID data set to a weekly counter
+covid_week_data <- Covid %>% group_by(weekend_date_correct =lubridate::floor_date(weekend_date_correct, unit = "week")) %>%
+  summarise(total_admitted_COVID = sum(NumberAdmitted))
 
-p2 <- ggplot(Covid, aes(x = weekend_date_correct,
-                  y = NumberAdmitted)) +
-  geom_smooth() + labs(x = "date",
-                       y = "number of covid hospitalisations",
-                       title = "Number of Covid Hospitalisations by date")
-combined_plot <- plot_grid(p1, p2)
+#Join dataset
+AandE_covid <- Week_data %>% full_join(covid_week_data, by = "weekend_date_correct") %>% drop_na()
 
-print(combined_plot)
+
+pCOVID <- ggplot(AandE_covid, aes(x = total_admitted_COVID,
+                                  y = total_admitted_AandE)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Linear Regression",
+       x = "Total Admitted COVID",
+       y = "Total Admitted A&E")
+
+print(pCOVID)
 ```
----
-- From this it can be seen that there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
-- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E. This will have driven down the median waiting time. 
-- Hence we can state that COVID levels did have an effect on A&E admissions.
 ---
 class: inverse, center, middle
 
@@ -174,7 +181,9 @@ class: inverse, center, middle
 - Conducted a linear regression of the % within 4 hours against the number of vacancies in NHS Scotland (WTE). 
 ---
 #Preliminary Visualisations
-- Appearance of the same trend in each plot, only flipped -> May have a linear relationship 
+- Appearance of the same trend in each plot, only flipped -> May have a linear relationship
+
+
 ```{r workforce visualisations, echo = FALSE, warning=FALSE, message=FALSE}
 p3 <- AandE %>% 
   mutate(year = year(weekend_date_correct)) %>%

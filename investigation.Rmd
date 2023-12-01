@@ -45,11 +45,7 @@ AandE <- aANDe %>%
  
 
 #renaming columns to be consistent
-AandE <- AandE %>%
-  rename(
-    WeekendDateCorrect = weekend_date_correct,
-    QuarterIntv = quarter,
-  )
+
 
 Covid <- covid_nottidy %>% 
    mutate(
@@ -162,7 +158,6 @@ geom_freqpoly(stat="identity") +
 ```
 
 ```{r}
-
 Covidgraph <- AandE %>% filter(weekend_date_correct > ym("2020-03"), weekend_date_correct <= ym("2023-09")) 
 
 p1 <- ggplot(Covidgraph, aes(x = weekend_date_correct,
@@ -183,6 +178,37 @@ print(combined_plot)
 ```
 
 From this it can be seen that the number of A and E admissions is directly inproportionate to the number of covid admissions.
+
+```{r covid reg}
+#Group AandE admissions by date
+Week_data <- AandE %>% 
+  group_by(weekend_date_correct) %>% 
+  summarise(total_admitted_AandE = sum(NumberOfAttendancesEpisode))
+
+#change format of COVID data set to a weekly counter
+covid_week_data <- Covid %>% group_by(weekend_date_correct =lubridate::floor_date(weekend_date_correct, unit = "week")) %>%
+  summarise(total_admitted_COVID = sum(NumberAdmitted))
+
+#Join dataset
+AandE_covid <- Week_data %>% full_join(covid_week_data, by = "weekend_date_correct") %>% drop_na()
+
+#Linear reg model
+linear_model_covid <- lm(total_admitted_AandE ~ total_admitted_COVID, data = AandE_covid)
+
+summary(linear_model_covid)
+
+#Plot model
+pCOVID <- ggplot(AandE_covid, aes(x = total_admitted_COVID,
+                                  y = total_admitted_AandE)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Linear Regression",
+       x = "Total Admitted COVID",
+       y = "Total Admitted A&E")
+
+print(pCOVID)
+```
+
 
 ```{r}
 AandE$Z_Score_Within4Hours <- scale(AandE$PercentageWithin4HoursEpisode)
@@ -219,7 +245,7 @@ p4 <- nhs_workforce %>%
   geom_smooth() +
   theme_bw() # Creates a plot of median percentage of vacancies among allied health NHS Scotland workers for every quarter of data collection to compare against the above plot
 
-  plot_grid(p3,p4) # Creates a plot grid of the last two plots to more easily compare their shapes and trends
+  plot_grid(p3, p4) # Creates a plot grid of the last two plots to more easily compare their shapes and trends
   
   AandE_work <- AandE %>%
     inner_join(
