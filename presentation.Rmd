@@ -447,16 +447,28 @@ ggplot(MeanAtten, aes(x = Mean, y = Mean)) +
 ```
 
 ```{r Cam Graph, echo = FALSE, warning=FALSE, message=FALSE}
-ggplot(MeanAtten, aes(x = HBT, y = Mean, fill = HBT)) +
+pCAM <- ggplot(MeanAtten, aes(x = HBT, y = Mean, fill = HBT)) +
   geom_bar(stat = "identity") +
   labs(title = "Mean Attendances for Health Board Trusts",
        x = "Health Board Trusts",
        y = "Mean Attendances") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(pCAM)
 ```
 
+---
+```{r Cam, echo = FALSE, warning=FALSE, message=FALSE}
+print(MergedHBT)
+```
 
+Mean - Represents the mean number of attendances at A&E wards within a health board area
+
+Average Percentages - Demonstrate the percentage of attendees that have to wait a given interval of time
+
+When combining these within a table, it is evident that HBT's with large amount of attendacnes on average, tend to have longer wait times. This is demonstrated with HBT S08000015	in which it has 988 average attendances per episode (noted as large) and 3% of these people are waiting over 12 hours. 
+```
 ---
 class: inverse, center, middle
 
