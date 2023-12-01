@@ -383,11 +383,8 @@ ggplot(MeanAtten, aes(x = Mean, y = Mean)) +
   theme_minimal()
 ```
 
-
-
-```{r health board plot, echo = FALSE, warning=FALSE, message=FALSE }
-#creating graph
-ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column)) +
+```{r Cam Graph, echo = FALSE, warning=FALSE, message=FALSE}
+ggplot(MeanAtten, aes(x = HBT, y = Mean, fill = HBT)) +
   geom_bar(stat = "identity") +
   labs(title = "Mean Attendances for Health Board Trusts",
        x = "Health Board Trusts",
@@ -395,6 +392,8 @@ ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column))
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+
 ---
 class: inverse, center, middle
 
