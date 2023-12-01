@@ -148,6 +148,12 @@ In the following "Discussion" section, we will dive further into our research qu
 **Discussion:**
 We discovered that the size of an A&E facility does in fact affect the waiting times for a location/Hea, this was represented by a dataframe that was mutated to demonstrate mean attendances for Health Boards and the percentage of waiting times (within 4 hours and over 4/8/12 hours) for individuals who attended the facility.
 
+There are severe ethical considerations in relation to our investigation as the wait time for an individual within an A&E facility can mean a matter of life and death. 
+
+To incorporate our investigation into the Scottish NHS it would be advisable to focus on amount of staff and precautions for if staff are absent as demonstrated by our investigation, size of Health Board and Staff Absences are are significant factor in delayed wait times.
+
+There are limitations of the data source as there are problems with staff vacancies since there is a small sample size which means the data could be distorted.
+
 ## References
 
 List any references here.
