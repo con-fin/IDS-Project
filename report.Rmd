@@ -125,6 +125,8 @@ To incorporate our investigation into the Scottish NHS it would be advisable to 
 
 There are limitations of the data source as there are problems with staff vacancies since there is a small sample size which means the data could be distorted.
 
+We Discovered that mathematically there is a relationship between COVID admissions and A&E admissions. The linear regression suggests that whilst there were high levels of COVID hospital admissions the level of A&E admissions fell. At a rate of 2.8 admissions per COVID admission. Additionally the model predicts that at 0 COVID admissions there would be around 24,500 A&E admissions, which positive in regards to the performance of the model as when you take the mean of the admissions data before COVID you get levels roughly akin to this figure. This explains the spike in the % of people waiting for less than four hours during 2020. However it does not explain the decline in this level that followed. One on the limitations of the COVID data set, is how the data was recorded. COVID hospitalizations were registered when someone arrived in hospital and tested positive for the virus, so this can't give us indications of how busy the hospitals were. It mainly tells us how much virus was in the population at the time. 
+
 ## References
 
 - Public Health Scotland [PHS]. (2023a). Weekly Accident & Emergency Activity and Waiting Times. https://www.opendata.nhs.scot/dataset/weekly-accident-and-emergency-activity-and-waiting-times/resource/a5f7ca94-c810-41b5-a7c9-25c18d43e5a4. Retrieved 20 October 2023.  
