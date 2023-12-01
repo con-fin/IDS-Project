@@ -46,30 +46,7 @@ It was used to establish the amount of hospitalisations there were due to COVID 
 The other secondary dataset used was also by Public Health Scotland.
 This dataset included information about staff vacancies by quarter.
 
-See <http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840> for guidance on proper citation for datasets.
-If you got your data off the web, make sure to state the retrieval date.
-
 ## Findings
-
-The write-up of your project and findings go here.
-
-Think of this as the text of your presentation with some extra detail to cover what there was not time to discuss in the presentation.
-This might include any assumptions you made when doing your analysis, any limitations of the work you have done or any ideas you have for future work.
-Feel free to split this section into subsections to make it easier to read.
-
-The length should be roughly 1,500 words.
-If you want to use a word count addin, you can install this by copying and pasting the following into RStudio:
-
-`devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)`
-
-You will then need to restart RStudio.
-Once you have done that, select the text you want to count the words of, go to Addins, and select the `Word count` addin.
-This addin counts words using two different algorithms, but the results should be similar and as long as you're in the ballpark of 1,500 words, you're good!
-The addin will ignore code chunks and only count the words in prose.
-If you don't want to use the addin you can always copy and paste the text into Microsoft Word to do a Word Count!
-
-You can also load your data here and present any analysis results / plots.
-Make sure to hide your code with `echo = FALSE` unless the point you are trying to make is about the code itself, in which case you should show your code.
 
 **Methods:**
 
@@ -98,9 +75,11 @@ To study this link further, a preliminary linear regression model was built.
 
 These integrated data science tools, together with thorough data cleaning and preparation, enabled us to acquire significant insights into waiting times, discover patterns, and investigate potential links within the data, forming a solid foundation for our ongoing investigation.
 
-We had to calculate percentages, mutate our dataframes and create new ones to quantify to mean attendances per Health Board (HBT). Additionally, we created categorical variables quantifying HBTs into "High", "Medium" "Low" and plotted graphs based on those.
+We had to calculate percentages, mutate our dataframes and create new ones to quantify to mean attendances per Health Board (HBT).
+Additionally, we created categorical variables quantifying HBTs into "High", "Medium" "Low" and plotted graphs based on those.
 
 Additionally Renamed columns to maintain consistency as some columns were in different formats.
+
 **Results:**
 
 #### Exploratory Data Analysis (EDA)
@@ -109,10 +88,8 @@ During our in-depth analysis of the data, we thoroughly examined crucial variabl
 This investigation establishes a solid foundation for gaining a deeper comprehension of the factors that affect A&E waiting periods.
 
 We initiated our analysis by looking into the key summary statistics, which offered vital understanding of our datasets.
-For the A&E waiting durations, we discovered that the average wait time was roughly **"X"** hours, with a median of **"Y"** hours, and a standard deviation of **"Z"** hours.
-These figures shed light on the central propensity of waiting periods, particularly emphasizing on the median value.
-Delving into COVID hospitalizations, we uncovered a weekly average of **"M"** hospitalizations during the pandemic, highlighting the time-based variations in these figures.
-In a similar fashion, evaluating NHS staff vacancies led us to identify a median of **"N"** vacancies per quarter, emphasizing the ever-changing staffing levels throughout the monitoring period.
+Delving into COVID hospitalizations, we uncovered a weekly average of 49.5 hospitalizations during the pandemic, highlighting the time-based variations in these figures.
+In a similar fashion, evaluating NHS staff vacancies led us to identify a median of 536 vacancies per quarter, emphasizing the ever-changing staffing levels throughout the monitoring period.
 
 To enhance our understanding of the data, we turned to visualizations.
 Histograms and box plots allowed us to visualize the distribution of A&E waiting times, shedding light on variations and the potential presence of outliers.
@@ -120,13 +97,11 @@ Furthermore, time series plots provided valuable insights into the trends in A&E
 Notably, these plots revealed fluctuations and a significant decline in waiting times during the COVID pandemic, with a particular focus on the median percentage of patients seen within four hours.
 Additionally, we employed Z-scores for anomaly detection, enabling us to pinpoint weeks with unusual waiting time patterns.
 
-**"add in any relevant visualizations to your sections or do whatever seems best"**
-
 #### Correlation Analysis
 
 Our investigation extended to correlation analysis, where we sought to uncover relationships between variables.
 Notably, we explored the correlation between A&E visits and staff vacancies.
-Our analysis yielded a negative correlation between the median percentage of A&E visits seen within four hours and NHS employment vacancies, with a Pearson correlation coefficient of **"R"**.
+Our analysis yielded a negative correlation between the median percentage of A&E visits seen within four hours and NHS employment vacancies.
 This finding indicates that as staff vacancies increased, the percentage of A&E visits seen within four hours decreased.
 The strength and direction of this correlation were visually represented through scatter plots and correlation matrices, further reinforcing the inverse relationship between A&E visits and staff vacancies.
 
@@ -134,21 +109,17 @@ The strength and direction of this correlation were visually represented through
 
 To delve deeper into the impact of staff vacancies on A&E waiting times, we developed a preliminary linear regression model.
 The model results were enlightening, revealing a statistically significant inverse relationship between the median percentage of A&E visits seen within four hours and NHS employment vacancies.
-The R-squared value of **"S"** indicated that over 90% of the variance in the percentage of visits within four hours could be explained by staff vacancies.
+The R-squared value of 0.90 indicated that over 90% of the variance in the percentage of visits within four hours could be explained by staff vacancies.
 This suggests that a higher number of staff vacancies in NHS Scotland is associated with lower performance in meeting the target of seeing A&E patients within four hours.
-
-#### Additional Findings
-
-Beyond our primary analyses, we observed other noteworthy patterns and trends within the data.
-For instance, [mention any additional findings or patterns you observed during your analysis, including values or statistics if applicable (if not we can exclude this section)].
 
 The combined results offer a thorough summary of our data analysis and its significance in comprehending A&E waiting times, especially during the COVID pandemic and considering NHS staffing levels.
 In the following "Discussion" section, we will dive further into our research question responses, examine the strengths and weaknesses of our inquiry, and address the ethical aspects surrounding our conclusions.
 
 **Discussion:**
+
 We discovered that the size of an A&E facility does in fact affect the waiting times for a location/Hea, this was represented by a dataframe that was mutated to demonstrate mean attendances for Health Boards and the percentage of waiting times (within 4 hours and over 4/8/12 hours) for individuals who attended the facility.
 
-There are severe ethical considerations in relation to our investigation as the wait time for an individual within an A&E facility can mean a matter of life and death. 
+There are severe ethical considerations in relation to our investigation as the wait time for an individual within an A&E facility can mean a matter of life and death.
 
 To incorporate our investigation into the Scottish NHS it would be advisable to focus on amount of staff and precautions for if staff are absent as demonstrated by our investigation, size of Health Board and Staff Absences are are significant factor in delayed wait times.
 

@@ -11,7 +11,7 @@
 
 <meta name="author" content="by Binary_Brigade: Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton &amp; Cameron Smith" />
 
-<meta name="date" content="2023-11-30" />
+<meta name="date" content="2023-12-01" />
 
 <title>Project title</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">Project title</h1>
 <h4 class="author">by Binary_Brigade: Connor Finlay, Ade Obawole, Murray
 Bone, Alexander Patton &amp; Cameron Smith</h4>
-<h4 class="date">2023-11-30</h4>
+<h4 class="date">2023-12-01</h4>
 
 </div>
 
@@ -378,35 +378,9 @@ produced by public health Scotland. It was used to establish the amount
 of hospitalisations there were due to COVID in a given week. The other
 secondary dataset used was also by Public Health Scotland. This dataset
 included information about staff vacancies by quarter.</p>
-<p>See <a href="http://libraryguides.vu.edu.au/c.php?g=386501&amp;p=4347840" class="uri">http://libraryguides.vu.edu.au/c.php?g=386501&amp;p=4347840</a>
-for guidance on proper citation for datasets. If you got your data off
-the web, make sure to state the retrieval date.</p>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
-<p>The write-up of your project and findings go here.</p>
-<p>Think of this as the text of your presentation with some extra detail
-to cover what there was not time to discuss in the presentation. This
-might include any assumptions you made when doing your analysis, any
-limitations of the work you have done or any ideas you have for future
-work. Feel free to split this section into subsections to make it easier
-to read.</p>
-<p>The length should be roughly 1,500 words. If you want to use a word
-count addin, you can install this by copying and pasting the following
-into RStudio:</p>
-<p><code>devtools::install_github(&quot;benmarwick/wordcountaddin&quot;, type = &quot;source&quot;, dependencies = TRUE)</code></p>
-<p>You will then need to restart RStudio. Once you have done that,
-select the text you want to count the words of, go to Addins, and select
-the <code>Word count</code> addin. This addin counts words using two
-different algorithms, but the results should be similar and as long as
-you’re in the ballpark of 1,500 words, you’re good! The addin will
-ignore code chunks and only count the words in prose. If you don’t want
-to use the addin you can always copy and paste the text into Microsoft
-Word to do a Word Count!</p>
-<p>You can also load your data here and present any analysis results /
-plots. Make sure to hide your code with <code>echo = FALSE</code> unless
-the point you are trying to make is about the code itself, in which case
-you should show your code.</p>
 <p><strong>Methods:</strong></p>
 <p>In our research, we initiated the process by loading three integral
 datasets - data from A&amp;E, COVID-related data, and information from
@@ -451,6 +425,12 @@ cleaning and preparation, enabled us to acquire significant insights
 into waiting times, discover patterns, and investigate potential links
 within the data, forming a solid foundation for our ongoing
 investigation.</p>
+<p>We had to calculate percentages, mutate our dataframes and create new
+ones to quantify to mean attendances per Health Board (HBT).
+Additionally, we created categorical variables quantifying HBTs into
+“High”, “Medium” “Low” and plotted graphs based on those.</p>
+<p>Additionally Renamed columns to maintain consistency as some columns
+were in different formats.</p>
 <p><strong>Results:</strong></p>
 <div id="exploratory-data-analysis-eda" class="section level4">
 <h4>Exploratory Data Analysis (EDA)</h4>
@@ -460,18 +440,12 @@ hospitalizations, and NHS staff vacancies. This investigation
 establishes a solid foundation for gaining a deeper comprehension of the
 factors that affect A&amp;E waiting periods.</p>
 <p>We initiated our analysis by looking into the key summary statistics,
-which offered vital understanding of our datasets. For the A&amp;E
-waiting durations, we discovered that the average wait time was roughly
-<strong>“X”</strong> hours, with a median of <strong>“Y”</strong> hours,
-and a standard deviation of <strong>“Z”</strong> hours. These figures
-shed light on the central propensity of waiting periods, particularly
-emphasizing on the median value. Delving into COVID hospitalizations, we
-uncovered a weekly average of <strong>“M”</strong> hospitalizations
+which offered vital understanding of our datasets. Delving into COVID
+hospitalizations, we uncovered a weekly average of 49.5 hospitalizations
 during the pandemic, highlighting the time-based variations in these
 figures. In a similar fashion, evaluating NHS staff vacancies led us to
-identify a median of <strong>“N”</strong> vacancies per quarter,
-emphasizing the ever-changing staffing levels throughout the monitoring
-period.</p>
+identify a median of 536 vacancies per quarter, emphasizing the
+ever-changing staffing levels throughout the monitoring period.</p>
 <p>To enhance our understanding of the data, we turned to
 visualizations. Histograms and box plots allowed us to visualize the
 distribution of A&amp;E waiting times, shedding light on variations and
@@ -482,8 +456,6 @@ significant decline in waiting times during the COVID pandemic, with a
 particular focus on the median percentage of patients seen within four
 hours. Additionally, we employed Z-scores for anomaly detection,
 enabling us to pinpoint weeks with unusual waiting time patterns.</p>
-<p><strong>“add in any relevant visualizations to your sections or do
-whatever seems best”</strong></p>
 </div>
 <div id="correlation-analysis" class="section level4">
 <h4>Correlation Analysis</h4>
@@ -491,8 +463,7 @@ whatever seems best”</strong></p>
 to uncover relationships between variables. Notably, we explored the
 correlation between A&amp;E visits and staff vacancies. Our analysis
 yielded a negative correlation between the median percentage of A&amp;E
-visits seen within four hours and NHS employment vacancies, with a
-Pearson correlation coefficient of <strong>“R”</strong>. This finding
+visits seen within four hours and NHS employment vacancies. This finding
 indicates that as staff vacancies increased, the percentage of A&amp;E
 visits seen within four hours decreased. The strength and direction of
 this correlation were visually represented through scatter plots and
@@ -505,19 +476,12 @@ between A&amp;E visits and staff vacancies.</p>
 times, we developed a preliminary linear regression model. The model
 results were enlightening, revealing a statistically significant inverse
 relationship between the median percentage of A&amp;E visits seen within
-four hours and NHS employment vacancies. The R-squared value of
-<strong>“S”</strong> indicated that over 90% of the variance in the
-percentage of visits within four hours could be explained by staff
-vacancies. This suggests that a higher number of staff vacancies in NHS
-Scotland is associated with lower performance in meeting the target of
-seeing A&amp;E patients within four hours.</p>
-</div>
-<div id="additional-findings" class="section level4">
-<h4>Additional Findings</h4>
-<p>Beyond our primary analyses, we observed other noteworthy patterns
-and trends within the data. For instance, [mention any additional
-findings or patterns you observed during your analysis, including values
-or statistics if applicable (if not we can exclude this section)].</p>
+four hours and NHS employment vacancies. The R-squared value of 0.90
+indicated that over 90% of the variance in the percentage of visits
+within four hours could be explained by staff vacancies. This suggests
+that a higher number of staff vacancies in NHS Scotland is associated
+with lower performance in meeting the target of seeing A&amp;E patients
+within four hours.</p>
 <p>The combined results offer a thorough summary of our data analysis
 and its significance in comprehending A&amp;E waiting times, especially
 during the COVID pandemic and considering NHS staffing levels. In the
@@ -525,6 +489,21 @@ following “Discussion” section, we will dive further into our research
 question responses, examine the strengths and weaknesses of our inquiry,
 and address the ethical aspects surrounding our conclusions.</p>
 <p><strong>Discussion:</strong></p>
+<p>We discovered that the size of an A&amp;E facility does in fact
+affect the waiting times for a location/Hea, this was represented by a
+dataframe that was mutated to demonstrate mean attendances for Health
+Boards and the percentage of waiting times (within 4 hours and over
+4/8/12 hours) for individuals who attended the facility.</p>
+<p>There are severe ethical considerations in relation to our
+investigation as the wait time for an individual within an A&amp;E
+facility can mean a matter of life and death.</p>
+<p>To incorporate our investigation into the Scottish NHS it would be
+advisable to focus on amount of staff and precautions for if staff are
+absent as demonstrated by our investigation, size of Health Board and
+Staff Absences are are significant factor in delayed wait times.</p>
+<p>There are limitations of the data source as there are problems with
+staff vacancies since there is a small sample size which means the data
+could be distorted.</p>
 </div>
 </div>
 <div id="references" class="section level2">
