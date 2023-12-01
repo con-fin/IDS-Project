@@ -4,7 +4,7 @@
     <title>A&amp;E Investigation</title>
     <meta charset="utf-8" />
     <meta name="author" content="Binary_Brigade   Connor Finlay, Ade Obawole, Murray Bone, Alexander Patton &amp; Cameron" />
-    <meta name="date" content="2023-11-30" />
+    <meta name="date" content="2023-12-01" />
     <script src="libs/header-attrs-2.25/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -25,7 +25,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2023-11-30
+### 2023-12-01
 ]
 
 ---
@@ -63,13 +63,15 @@ The median percentage seen to within 4 hours seems to decrease over time (especi
 class: inverse, center, middle
 
 #Why during 2020
+
 ---
-- To investigate wait times during 2020 we joined a data set that contained information about COVID-19
-&lt;img src="presentation_files/figure-html/Covid graph 2-1.png" width="80%" /&gt;
+#In order to investigate this, a linear regression model was fitted to the joint data set. 
+- Intercept = 24415.354, suggests that when there are no COVID hosptial admissions there would be 24415 A&amp;E admissions. 
+- The gradient is -2.8, which tells us that for everyone person admitted due to covid. An estimated 2.8 fewer people are admitted to AandE
+- The rule is statistically meaningful telling us that: there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
+- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&amp;E. 
 ---
-- From this it can be seen that there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
-- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&amp;E. This will have driven down the median waiting time. 
-- Hence we can state that COVID levels did have an effect on A&amp;E admissions.
+&lt;img src="presentation_files/figure-html/Covid plot-1.png" width="80%" /&gt;
 ---
 class: inverse, center, middle
 
@@ -84,7 +86,9 @@ class: inverse, center, middle
 - Conducted a linear regression of the % within 4 hours against the number of vacancies in NHS Scotland (WTE). 
 ---
 #Preliminary Visualisations
-- Appearance of the same trend in each plot, only flipped -&gt; May have a linear relationship 
+- Appearance of the same trend in each plot, only flipped -&gt; May have a linear relationship
+
+
 &lt;img src="presentation_files/figure-html/workforce visualisations-1.png" width="80%" /&gt;
 
 ---
