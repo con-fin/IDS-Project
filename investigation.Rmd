@@ -395,13 +395,6 @@ print(MergedHBT)
 #creating categorical variables
 MeanAtten$Mean <- as.factor(ifelse(MeanAtten$Mean < 399, 'Small', ifelse(MeanAtten$Mean > 399 & MeanAtten$Mean <= 900, 'Medium', ifelse(MeanAtten$Mean > 900, 'Large', NA))))
 
-ggplot(MeanAtten, aes(x = Mean, y = Mean)) +
-  geom_point(position = position_jitter(width = 0.2, height = 0)) +
-  labs(title = "Point Plot of 'Mean' Categories",
-       x = "Mean Categories",
-       y = "Mean Value") +
-  theme_minimal()
-
 #creating graph
 ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column)) +
   geom_bar(stat = "identity") +
