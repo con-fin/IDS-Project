@@ -69,17 +69,8 @@ nhs_workforce <- nhs_workforce_nottidy %>%
   
 ```
 
-Summarising wait time over 4 hours based on location of treatment and percentage within 4 hours by year
 
 ```{r spare}
-AandE %>% 
-  group_by(TreatmentLocation) %>% 
-  summarise(
-    avg_pct_Within4 = mean(PercentageWithin4HoursEpisode),
-    avg_pct_Over8 = mean(PercentageOver8HoursEpisode),
-    avg_pct_Over12 = mean(PercentageOver12HoursEpisode)
-    )
-#It is evident that based on the location of the practice, the average amount of people that wait 4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on individual practice, over all weeks.
 AandE %>% 
   mutate(year = year(weekend_date_correct)) %>%
   group_by(year) %>% 
@@ -352,13 +343,28 @@ S29 <- HBTAtten %>%
 mean(S29$NumAttended)
 
 #creating a new dataframe that includes the mean attendances of HBTs
-first_column <- c("S08000015", "S08000016", "S08000017", "S08000019", "S08000020", "S08000022", "S08000024", "S08000025", "S08000026", "S08000028", "S08000029", "S08000030", "S08000031", "S08000032")
-second_column <- c("988.0455", "561.5078","435.0532", "1163.206", "616.1212", "285.3492", " 988.0455", "118.2772", "139.6851", " 114.2506", "1219.539", "709.4213","1274.071", "1260.387")
+HBT <- c("S08000015", "S08000016", "S08000017", "S08000019", "S08000020", "S08000022", "S08000024", "S08000025", "S08000026", "S08000028", "S08000029", "S08000030", "S08000031", "S08000032")
+Mean <- c("988.0455", "561.5078","435.0532", "1163.206", "616.1212", "285.3492", " 988.0455", "118.2772", "139.6851", " 114.2506", "1219.539", "709.4213","1274.071", "1260.387")
 
-
-
-MeanAtten <- data.frame(first_column, second_column)
+MeanAtten <- data.frame(HBT, Mean)
 MeanAtten
+
+#creating a Percentage over 4 hours column
+AandE$PercentageOver4HoursEpisode <- AandE$NumberOver4HoursEpisode / AandE$NumberOfAttendancesEpisode * 100
+
+#calculating wait time percentage over "x" hours to compare if being in a HBT with a large amount of attendees means that patient has to wait longer in A&E.
+MeanPct <- AandE %>% 
+  group_by(HBT) %>% 
+  summarise(
+    AvgPctWithin4 = mean(PercentageWithin4HoursEpisode),
+    AvgPctOver4 = mean(PercentageOver4HoursEpisode),
+    AvgPctOver8 = mean(PercentageOver8HoursEpisode,),
+    AvgPctOver12 = mean(PercentageOver12HoursEpisode)
+    )
+#It is evident that based on the HBT of the practice, the average amount of people that wait <4/4/8/12 hours vary drastically. Summarising this allows us to witness what the average amount of wait time is based on geographical location, over all weeks.
+#When comparing this to the Number of Attendances in total, it is evident that HBT's with large amount of attendacnes on average, tend to have longer wait times. This is demonstrated with HBT S08000015	in which it has 988 average attendances per episode (noted as large) and 3% of these people are waiting over 12 hours.
+MergedHBT <- merge(MeanAtten, MeanPct, by = "HBT")
+print(MergedHBT)
 
 #creating graph
 ggplot(MeanAtten, aes(x = first_column, y = second_column, fill = first_column)) +
