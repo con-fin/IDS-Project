@@ -67,9 +67,55 @@ class: inverse, center, middle
 - To investigate wait times during 2020 we joined a data set that contained information about COVID-19
 &lt;img src="presentation_files/figure-html/Covid graph 2-1.png" width="80%" /&gt;
 ---
-- From this it can be seen that there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
-- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&amp;E. This will have driven down the median waiting time. 
-- Hence we can state that COVID levels did have an effect on A&amp;E admissions.
+#In order to investigate this, a linear regression model was fitted to the joint data set. 
+ 
+
+- Intercept = 24415.354, suggests that when there are no COVID hosptial admissions there would be 24415 A&amp;E admissions. 
+ 
+
+- The gradient is -2.8, which tells us that for everyone person admitted due to covid. An estimated 2.8 fewer people are admitted to AandE
+ 
+
+- The rule is statistically meaningful telling us that: there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
+ 
+
+- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&amp;E.
+---
+
+&lt;img src="presentation_files/figure-html/covid reg-1.png" width="80%" /&gt;
+ 
+
+
+```r
+AandE$Z_Score_Within4Hours &lt;- scale(AandE$PercentageWithin4HoursEpisode)
+outlier_threshold &lt;- 3
+outliers_within4hours &lt;- AandE[abs(AandE$Z_Score_Within4Hours) &gt; outlier_threshold, ]
+print(outliers_within4hours)
+```
+
+```
+## # A tibble: 299 × 14
+##    `_id` HBT     TreatmentLocation NumberOfAttendancesE…¹ NumberWithin4HoursEp…²
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;                              &lt;dbl&gt;                  &lt;dbl&gt;
+##  1 10302 S08000… G405H                               1674                    750
+##  2 10386 S08000… V217H                               1180                    575
+##  3 10416 S08000… V217H                               1161                    475
+##  4 10446 S08000… V217H                               1164                    548
+##  5 10482 S08000… G405H                               1695                    803
+##  6 10626 S08000… V217H                               1079                    478
+##  7 10656 S08000… V217H                               1119                    539
+##  8 10657 S08000… N101H                                967                    466
+##  9 10686 S08000… V217H                               1103                    551
+## 10 10703 S08000… S314H                               2247                   1138
+## # ℹ 289 more rows
+## # ℹ abbreviated names: ¹​NumberOfAttendancesEpisode, ²​NumberWithin4HoursEpisode
+## # ℹ 9 more variables: NumberOver4HoursEpisode &lt;dbl&gt;,
+## #   PercentageWithin4HoursEpisode &lt;dbl&gt;, NumberOver8HoursEpisode &lt;dbl&gt;,
+## #   PercentageOver8HoursEpisode &lt;dbl&gt;, NumberOver12HoursEpisode &lt;dbl&gt;,
+## #   PercentageOver12HoursEpisode &lt;dbl&gt;, weekend_date_correct &lt;date&gt;,
+## #   quarter &lt;dbl&gt;, Z_Score_Within4Hours &lt;dbl[,1]&gt;
+```
+
 ---
 class: inverse, center, middle
 

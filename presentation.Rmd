@@ -157,9 +157,72 @@ combined_plot <- plot_grid(p1, p2)
 print(combined_plot)
 ```
 ---
-- From this it can be seen that there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
-- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E. This will have driven down the median waiting time. 
-- Hence we can state that COVID levels did have an effect on A&E admissions.
+#In order to investigate this, a linear regression model was fitted to the joint data set. 
+ 
+
+- Intercept = 24415.354, suggests that when there are no COVID hosptial admissions there would be 24415 A&E admissions. 
+ 
+
+- The gradient is -2.8, which tells us that for everyone person admitted due to covid. An estimated 2.8 fewer people are admitted to AandE
+ 
+
+- The rule is statistically meaningful telling us that: there is an inverse relationship between the number of hospital addmisions for COVID and the number of A and E admissions.
+ 
+
+- Suggesting the type of healthcare required for people during COVID lockdowns wasn't A&E.
+---
+```{r covid reg start, include=FALSE}
+#Group AandE admissions by date
+Week_data <- AandE %>% 
+  group_by(weekend_date_correct) %>% 
+  summarise(total_admitted_AandE = sum(NumberOfAttendancesEpisode))
+
+#change format of COVID data set to a weekly counter
+covid_week_data <- Covid %>% group_by(weekend_date_correct =lubridate::floor_date(weekend_date_correct, unit = "week")) %>%
+  summarise(total_admitted_COVID = sum(NumberAdmitted))
+
+#Join dataset
+AandE_covid <- Week_data %>% full_join(covid_week_data, by = "weekend_date_correct") %>% drop_na()
+
+#Linear reg model
+linear_model_covid <- lm(total_admitted_AandE ~ total_admitted_COVID, data = AandE_covid)
+
+summary(linear_model_covid)
+
+#Plot model
+pCOVID <- ggplot(AandE_covid, aes(x = total_admitted_COVID,
+                                  y = total_admitted_AandE)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Linear Regression",
+       x = "Total Admitted COVID",
+       y = "Total Admitted A&E")
+
+print(pCOVID)
+```
+```{r covid reg,  echo = FALSE, warning=FALSE, message=FALSE}
+
+#Plot model
+pCOVID <- ggplot(AandE_covid, aes(x = total_admitted_COVID,
+                                  y = total_admitted_AandE)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Linear Regression",
+       x = "Total Admitted COVID",
+       y = "Total Admitted A&E")
+
+print(pCOVID)
+```
+ 
+
+```{r}
+AandE$Z_Score_Within4Hours <- scale(AandE$PercentageWithin4HoursEpisode)
+outlier_threshold <- 3
+outliers_within4hours <- AandE[abs(AandE$Z_Score_Within4Hours) > outlier_threshold, ]
+print(outliers_within4hours)
+
+```
+
 ---
 class: inverse, center, middle
 
